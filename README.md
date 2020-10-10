@@ -1,5 +1,5 @@
-# 1. npm install --save firebase
+# 1. 리액트 설치와 초기 작업
 
-셋업
+npm install --save firebase
 
-======
+---
