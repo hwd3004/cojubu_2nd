@@ -27,3 +27,11 @@ npm install react-bootstrap bootstrap
 npm install react-router-dom
 
 구글 api - https://console.developers.google.com/apis/credentials?project=coju-bu&folder=&organizationId=
+
+---
+
+# 5. API 키 보호 완료와 scss 직접 사용해보기
+
+작업 중 문제가 생기면 API 키를 수정해봐야할것이다
+
+npm install node-sass
