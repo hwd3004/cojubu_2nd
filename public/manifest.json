@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "코주부",
+  "name": "코주부 - 코인, 주식으로 부자되기 종합 커뮤니티",
   "icons": [
     {
       "src": "favicon.ico",

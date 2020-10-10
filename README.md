@@ -11,3 +11,11 @@ npm install --save firebase
 내 사이트 주소 - https://coju-bu.web.app/
 
 ---
+
+# 3. firebase, dotenv, 부트스트랩 설치
+
+npm install --save firebase
+
+npm install dotenv
+
+npm install react-bootstrap bootstrap
