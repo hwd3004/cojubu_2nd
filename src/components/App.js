@@ -2,20 +2,23 @@ import React from "react";
 import Header from "./Header";
 import Stock from "../routes/Stock";
 import Cryptocurrency from "../routes/Cryptocurrency";
-import "./App.scss";
 import { Route, Link, Switch } from "react-router-dom";
 import Home from "../routes/Home";
 import Footer from "./Footer";
+import "../scss/reset.scss";
+import "../scss/App.scss";
+import SignUpForm from "./SignUpForm";
 
 const App = () => {
   return (
-    <>
-      <div id="header">
+    <div id="App">
+      <div className="header_div_bg">
         <Header />
       </div>
 
-      <div className="App">
-        <Route path="/">
+      <div className="set_bg">
+
+        <Route exact path="/">
           <Home />
         </Route>
 
@@ -26,6 +29,10 @@ const App = () => {
         <Route path="/Cryptocurrency">
           <Cryptocurrency />
         </Route>
+
+        <Route path="/SignUpForm">
+          <SignUpForm />
+        </Route>
       </div>
 
       <Footer />
@@ -33,7 +40,7 @@ const App = () => {
       <script src="/__/firebase/7.23.0/firebase-app.js"></script>
       <script src="/__/firebase/7.23.0/firebase-analytics.js"></script>
       <script src="/__/firebase/init.js"></script>
-    </>
+    </div>
   );
 };
 

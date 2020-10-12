@@ -4,37 +4,37 @@ import {
   Nav,
   NavDropdown,
   Form,
-  Button,
   FormControl,
+  Button,
 } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import "../scss/Header.scss";
+import SignUpForm from "./SignUpForm";
 
-const NavBar = () => {
+const Header = () => {
   return (
-    <Navbar bg="light" expand="lg">
-      <Navbar.Brand href="#">코주부</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
-          <Nav.Link href="#link">Link</Nav.Link>
-          <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.2">
-              Another action
-            </NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href="#action/3.4">
-              Separated link
-            </NavDropdown.Item>
-          </NavDropdown>
-        </Nav>
-        <Form inline>
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-          <Button variant="outline-success">Search</Button>
-        </Form>
-      </Navbar.Collapse>
-    </Navbar>
+    <div id="Header" className="set_bg">
+      <Navbar collapseOnSelect expand="md" bg="light" variant="light">
+        <Navbar.Brand as={Link} to="/">
+          코주부
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="ml-auto">
+            <Form inline>
+              <FormControl type="text" placeholder="검색" className="mr-sm-2" />
+              <Button variant="outline-success">검색</Button>
+            </Form>
+          </Nav>
+          <Nav className="ml-auto">
+            <Nav.Link>로그인</Nav.Link>
+            <Nav.Link as={Link} to="/SignUpForm" >가입하기</Nav.Link>
+            {/* <SignUpForm></SignUpForm> */}
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+    </div>
   );
 };
 
-export default NavBar;
+export default Header;

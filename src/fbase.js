@@ -1,18 +1,16 @@
-import dotenv from "dotenv";
-import path from "path";
 import firebase from "firebase";
 
-dotenv.config({ path: path.resolve(__dirname, ".env") });
+const fbaseConfig = require('./fbaseConfig.json')
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_API_KEY,
-  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-  databaseURL: process.env.REACT_APP_DATABASE_URL,
-  projectId: process.env.REACT_APP_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_APP_ID,
-  measurementId: process.env.REACT_APP_MEASUREMENT_ID,
+  apiKey: fbaseConfig.API_KEY,
+  authDomain: fbaseConfig.AUTH_DOMAIN,
+  databaseURL: fbaseConfig.DATABASE_URL,
+  projectId: fbaseConfig.PROJECT_ID,
+  storageBucket: fbaseConfig.STORAGE_BUCKET,
+  messagingSenderId: fbaseConfig.MESSAGING_SENDER_ID,
+  appId: fbaseConfig.APP_ID,
+  measurementId: fbaseConfig.MEASUREMENT_ID,
 };
 
 firebase.initializeApp(firebaseConfig);

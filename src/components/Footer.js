@@ -1,8 +1,8 @@
 import React from "react";
-import "./Footer.scss";
+import "../scss/Footer.scss";
 
 const Footer = () => {
-  return <div id="footer">
+  return <div id="Footer">
       <span>footer</span>
   </div>;
 };

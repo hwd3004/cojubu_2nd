@@ -35,3 +35,7 @@ npm install react-router-dom
 작업 중 문제가 생기면 API 키를 수정해봐야할것이다
 
 npm install node-sass
+
+---
+
+# 6. 가입 작업 시작
