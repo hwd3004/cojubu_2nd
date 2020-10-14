@@ -3,7 +3,11 @@ import { authService } from "fbase";
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link, Route, Switch } from "react-router-dom";
+import Coin from "routes/Coin";
+import Home from "routes/Home";
 import SignUp from "routes/SignUp";
+import Skyrocket from "routes/Skyrocket";
+import Stock from "routes/Stock";
 import Profile from "./Profile";
 
 const AppRouter = ({ isLoggedIn }) => {
@@ -25,9 +29,9 @@ const AppRouter = ({ isLoggedIn }) => {
   const onSubmit = async (event) => {
     event.preventDefault();
     try {
-      await authService.signInWithEmailAndPassword(email, password)
+      await authService.signInWithEmailAndPassword(email, password);
     } catch (error) {
-      alert(error)
+      alert(error);
     }
   };
 
@@ -44,8 +48,20 @@ const AppRouter = ({ isLoggedIn }) => {
         ) : (
           <div>
             <form onSubmit={onSubmit}>
-              <input onChange={onChange} valeu={email} name="email" type="email" placeholder="이메일"></input>
-              <input onChange={onChange} email={password} name="password" type="password" placeholder="패스워드"></input>
+              <input
+                onChange={onChange}
+                valeu={email}
+                name="email"
+                type="email"
+                placeholder="이메일"
+              ></input>
+              <input
+                onChange={onChange}
+                email={password}
+                name="password"
+                type="password"
+                placeholder="패스워드"
+              ></input>
               <input type="submit" value="로그인"></input>
             </form>
             <Button as={Link} to="/SignUp">
@@ -54,9 +70,32 @@ const AppRouter = ({ isLoggedIn }) => {
           </div>
         )}
       </div>
+
+      <Button as={Link} to="/Skyrocket">
+        떡상
+      </Button>
+      <Button as={Link} to="/Coin">
+        코인
+      </Button>
+      <Button as={Link} to="/Stock">
+        주식
+      </Button>
+
       <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
         <Route path="/SignUp">
           <SignUp />
+        </Route>
+        <Route path="/Skyrocket">
+          <Skyrocket />
+        </Route>
+        <Route path="/Coin">
+          <Coin />
+        </Route>
+        <Route path="/Stock">
+          <Stock />
         </Route>
       </Switch>
     </div>

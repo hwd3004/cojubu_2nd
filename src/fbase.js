@@ -1,6 +1,6 @@
 import * as firebase from "firebase";
-
-const fbaseConfig = require('./fbaseConfig.json')
+import fbaseConfig from "fbaseConfig.json";
+// const fbaseConfig = require('./fbaseConfig.json')
 
 const firebaseConfig = {
   apiKey: fbaseConfig.API_KEY,

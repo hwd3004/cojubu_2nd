@@ -43,3 +43,7 @@ npm install node-sass
 ---
 
 # 7. 가입 작업에 닉넴 추가, db에 저장, 닉네임 표시까지 완료
+
+---
+
+# 8. CKEditor 설치 전 저장
