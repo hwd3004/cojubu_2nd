@@ -47,3 +47,11 @@ npm install node-sass
 ---
 
 # 8. CKEditor 설치 전 저장
+
+---
+
+# 9. CKEditor 설치와 사용해보기
+
+리액트에서 CKEditor를 쓰려면 eject를 통한 웹팩 수정을 꼭 해야하기때문에,
+
+안전을 위해 깃을 한번 더 커밋

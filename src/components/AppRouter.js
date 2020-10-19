@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link, Route, Switch } from "react-router-dom";
 import Coin from "routes/Coin";
+import CoinPost from "routes/CoinPost";
 import Home from "routes/Home";
 import SignUp from "routes/SignUp";
 import Skyrocket from "routes/Skyrocket";
@@ -71,15 +72,17 @@ const AppRouter = ({ isLoggedIn }) => {
         )}
       </div>
 
-      <Button as={Link} to="/Skyrocket">
-        떡상
-      </Button>
-      <Button as={Link} to="/Coin">
-        코인
-      </Button>
-      <Button as={Link} to="/Stock">
-        주식
-      </Button>
+      <nav>
+        <Button as={Link} to="/Skyrocket">
+          떡상
+        </Button>
+        <Button as={Link} to="/Coin">
+          코인
+        </Button>
+        <Button as={Link} to="/Stock">
+          주식
+        </Button>
+      </nav>
 
       <Switch>
         <Route exact path="/">
@@ -92,10 +95,13 @@ const AppRouter = ({ isLoggedIn }) => {
           <Skyrocket />
         </Route>
         <Route path="/Coin">
-          <Coin />
+          <Coin isLoggedIn={isLoggedIn} />
+        </Route>
+        <Route path="/CoinPost">
+          <CoinPost isLoggedIn={isLoggedIn} />
         </Route>
         <Route path="/Stock">
-          <Stock />
+          <Stock isLoggedIn={isLoggedIn} />
         </Route>
       </Switch>
     </div>

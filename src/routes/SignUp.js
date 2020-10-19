@@ -23,22 +23,22 @@ const SignUp = () => {
     }
   };
 
-  let userObj = {};
-
   const onSubmit = async (event) => {
     event.preventDefault();
     try {
-      await authService
-        .createUserWithEmailAndPassword(email, password)
-        .then(history.push("/"));
+      // await authService
+      // .createUserWithEmailAndPassword(email, password)
+      // .then(history.push("/"));
 
-      
+      await authService.createUserWithEmailAndPassword(email, password);
+
       // 주의 - uid도 db에 저장하기 위해서, 이 코드는 여기에 위치해야함
       await dbService
         .collection("userDB")
         .doc(email)
         .set({ uid: authService.currentUser.uid, email, password, nickname });
 
+      history.push("/");
     } catch (error) {
       setError(error);
     }
