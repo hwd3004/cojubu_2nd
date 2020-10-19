@@ -24,3 +24,5 @@ yarn-error.log*
 
 /src/fbaseConfig.json
 /src/tempConfig.json
+
+.env
