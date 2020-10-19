@@ -117,3 +117,9 @@ uploadUrl: `${process.env.REACT_APP_STORAGE_BUCKET}/images`,
 },
 
 우선 임시로 이렇게 해놓았다
+
+---
+
+# 13. CKEditor Final Setting
+
+---
