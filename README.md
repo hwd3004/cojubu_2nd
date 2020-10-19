@@ -95,3 +95,25 @@ npm install node-sass
 # 11. json 파일로 하던 환경변수 설정을 env로 바꿈
 
 전엔 안되더니... 뭘 빠뜨렸던건지
+
+---
+
+# 12. CKEditor5 EditorConfig
+
+1. https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html
+
+2. EditConfig.js에서
+
+simpleUpload: {
+// uploadUrl: `${process.env.REACT_APP_BASIC_SERVER_URL}/api/posts/image`,
+uploadUrl: `${process.env.REACT_APP_STORAGE_BUCKET}/images`,
+
+    // Headers sent along with the XMLHttpRequest to the upload server.
+
+    headers: {
+      "X-CSRF-TOKEN": "CSFR-Token",
+    },
+
+},
+
+우선 임시로 이렇게 해놓았다
