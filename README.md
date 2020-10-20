@@ -123,3 +123,11 @@ uploadUrl: `${process.env.REACT_APP_STORAGE_BUCKET}/images`,
 # 13. CKEditor Final Setting
 
 ---
+
+# 14. CKEditor5 For React
+
+CKEditor5의 툴바 아이콘이 크기가 엄청 크게 나오는 현상이 있음
+
+인프런 강의 댓글에 해결법이 있음
+
+style-loader 2.0.0 버전을 지우고, npm i style-loader@1.2.1
