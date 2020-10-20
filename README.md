@@ -102,7 +102,7 @@ npm install node-sass
 
 1. https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html
 
-2. EditConfig.js에서
+2. \src\components\editor\EditorConfig.js에서
 
 simpleUpload: {
 // uploadUrl: `${process.env.REACT_APP_BASIC_SERVER_URL}/api/posts/image`,
@@ -131,3 +131,14 @@ CKEditor5의 툴바 아이콘이 크기가 엄청 크게 나오는 현상이 있
 인프런 강의 댓글에 해결법이 있음
 
 style-loader 2.0.0 버전을 지우고, npm i style-loader@1.2.1
+
+---
+
+# 15. CKEditor GetDataFromCKEditor5
+
+1. https://dev.to/suraj975/ckeditor-image-upload-with-firebase-and-react-1pe8
+
+    파이어베이스와 CKEditor를 어떻게 연결시킬것인가에 대한 도움
+
+2. 일단은 파이버에이스와 CKEditor를 연결하여서, 이미지가 파이어베이스 스토리지로 업로드된것 확인하였음
+

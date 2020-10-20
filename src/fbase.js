@@ -2,19 +2,6 @@ import * as firebase from "firebase";
 import dotenv from "dotenv";
 dotenv.config();
 
-// import fbaseConfig from "fbaseConfig.json";
-
-// const firebaseConfig = {
-//   apiKey: fbaseConfig.API_KEY,
-//   authDomain: fbaseConfig.AUTH_DOMAIN,
-//   databaseURL: fbaseConfig.DATABASE_URL,
-//   projectId: fbaseConfig.PROJECT_ID,
-//   storageBucket: fbaseConfig.STORAGE_BUCKET,
-//   messagingSenderId: fbaseConfig.MESSAGING_SENDER_ID,
-//   appId: fbaseConfig.APP_ID,
-//   measurementId: fbaseConfig.MEASUREMENT_ID,
-// };
-
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,

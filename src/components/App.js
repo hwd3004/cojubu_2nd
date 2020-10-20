@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import AppRouter from "components/AppRouter";
 import { authService } from "fbase";
 
+import "scss/ckEditor.scss";
+
 const App = () => {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsloggedIn] = useState(false);

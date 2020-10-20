@@ -305,7 +305,7 @@ export const editorConfiguration = {
 
   simpleUpload: {
     // uploadUrl: `${process.env.REACT_APP_BASIC_SERVER_URL}/api/posts/image`,
-    uploadUrl: `${process.env.REACT_APP_STORAGE_BUCKET}/images`,
+    uploadUrl: `${process.env.REACT_APP_STORAGE_BUCKET}/api/posts/image`,
 
     // Headers sent along with the XMLHttpRequest to the upload server.
 
