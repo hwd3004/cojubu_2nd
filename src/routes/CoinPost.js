@@ -13,11 +13,17 @@ import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
 import { editorConfiguration } from "components/editor/EditorConfig";
 import MyInit from "components/editor/UploadAdapter.js";
+import { dbService } from "fbase";
 
 const CoinPost = ({ isLoggedIn }) => {
   const history = useHistory();
 
-  const [form, setValues] = useState({ title: "", contents: "", fileUrl: "" });
+  const [form, setValues] = useState({
+    title: "",
+    contents: "",
+    fileUrl: "",
+    category: "",
+  });
 
   const onChange = (e) => {
     setValues({
@@ -27,8 +33,18 @@ const CoinPost = ({ isLoggedIn }) => {
   };
 
   const onSubmit = async (event) => {
-    await event.preventDefault();
-    const { title, contents, fileUrl, category } = form;
+    event.preventDefault();
+    // const { title, contents, fileUrl, category } = form;
+
+    const newCoinPost = {
+      title: form.title,
+      contents: form.contents,
+      fileUrl: form.fileUrl,
+      category: form.category,
+      createdAt: Date.now(),
+    };
+
+    await dbService.collection("CoinPostDB").add(newCoinPost);
   };
 
   const getDataFromCKEditor = (event, editor) => {
@@ -72,9 +88,26 @@ const CoinPost = ({ isLoggedIn }) => {
     <div className="CoinPost">
       글쓰기 폼<div>{isLoggedIn ? null : history.push("/")}</div>
       <div className="container">
-        <Form>
-          <FormGroup className="mb-3">
-            <FormLabel for="title">Title</FormLabel>
+        {/* <form onSubmit={onSubmit}>
+          <p>제목 입력</p>
+          <input type="text" name="title" onChange={onChange}></input>
+
+          <p>카테고리</p>
+          <input type="text" name="category" onChange={onChange}></input>
+
+          <p>내용 입력</p>
+          <CKEditor
+            editor={ClassicEditor}
+            config={editorConfiguration}
+            onInit={MyInit}
+            onBlur={getDataFromCKEditor}
+          />
+          <input type="submit" value="작성" ></input>
+        </form> */}
+
+        <Form onSubmit={onSubmit}>
+          <FormGroup>
+            <FormLabel>Title</FormLabel>
             <FormControl
               type="text"
               name="title"
@@ -83,8 +116,8 @@ const CoinPost = ({ isLoggedIn }) => {
             />
           </FormGroup>
 
-          <FormGroup className="mb-3">
-            <FormLabel for="title">Category</FormLabel>
+          <FormGroup>
+            <FormLabel>Category</FormLabel>
             <FormControl
               type="text"
               name="category"
@@ -94,21 +127,23 @@ const CoinPost = ({ isLoggedIn }) => {
           </FormGroup>
 
           <FormGroup className="mb-3">
-            <FormLabel for="title">Content</FormLabel>
+            <FormLabel>Content</FormLabel>
             <CKEditor
               editor={ClassicEditor}
               config={editorConfiguration}
               onInit={MyInit}
               onBlur={getDataFromCKEditor}
             />
-            <Button
-              color="success"
-              block
-              className="mt-3 col-md-2 offset-md-10 mb-3"
-            >
-              제출
-            </Button>
           </FormGroup>
+
+          <Button
+            type="submit"
+            color="success"
+            block
+            className="mt-3 col-md-2 offset-md-10 mb-3"
+          >
+            제출
+          </Button>
         </Form>
       </div>
     </div>

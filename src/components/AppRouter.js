@@ -2,7 +2,7 @@
 import { authService } from "fbase";
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
-import { Link, Route, Switch } from "react-router-dom";
+import { Link, Redirect, Route, Switch } from "react-router-dom";
 import Coin from "routes/Coin";
 import CoinPost from "routes/CoinPost";
 import Home from "routes/Home";
@@ -88,21 +88,22 @@ const AppRouter = ({ isLoggedIn }) => {
         <Route exact path="/">
           <Home />
         </Route>
-        <Route path="/SignUp">
+        <Route exact path="/SignUp">
           <SignUp />
         </Route>
-        <Route path="/Skyrocket">
+        <Route exact path="/Skyrocket">
           <Skyrocket />
         </Route>
         <Route path="/Coin">
-          <Coin isLoggedIn={isLoggedIn} />
+          <Coin exact isLoggedIn={isLoggedIn} />
         </Route>
         <Route path="/CoinPost">
-          <CoinPost isLoggedIn={isLoggedIn} />
+          <CoinPost exact isLoggedIn={isLoggedIn} />
         </Route>
         <Route path="/Stock">
-          <Stock isLoggedIn={isLoggedIn} />
+          <Stock exact isLoggedIn={isLoggedIn} />
         </Route>
+        <Redirect from="*" to="/" />
       </Switch>
     </div>
   );

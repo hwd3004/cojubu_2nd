@@ -12,16 +12,21 @@ const Profile = () => {
 
   const [myNickname, setMyNickname] = useState("");
 
-  const myProfile = async () => {
-    const data = await dbService
+  const myProfile = () => {
+    const userRef = dbService
       .collection("userDB")
-      .where("email", "==", authService.currentUser.email)
-      .get();
+      .doc(`${authService.currentUser.email}`);
 
-    data.docs.map((doc) => {
-      return setMyNickname(doc.data().nickname);
+    userRef.get().then((doc) => {
+      setMyNickname(doc.data().nickname);
     });
   };
+
+  // dbService.collection('postDB').get().then(function(query){
+  //   query.forEach(function(doc){
+  //     console.log(`${doc.id} -> ${doc.data()}`)
+  //   })
+  // })
 
   useEffect(() => {
     myProfile();
