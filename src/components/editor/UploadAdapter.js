@@ -19,24 +19,24 @@ class MyUploadAdapter {
       (file) =>
         new Promise((resolve, reject) => {
           let storage = firebase.storage().ref();
-          let uploadTask = storage.child(`posts/image/${file.name}`).put(file, metadata);
+          let uploadTask = storage.child(`asd/${file.name}`).put(file, metadata);
 
           uploadTask.on(
             firebase.storage.TaskEvent.STATE_CHANGED,
             function (snapshot) {
               // Get task progress, including the number of  bytes to be uploaded
-              var progress =
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              // var progress =
+                // (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
-              console.log(`Upload is ${progress}% done`);
+              // console.log(`Upload is ${progress}% done`);
 
               // eslint-disable-next-line default-case
               switch (snapshot.state) {
                 case firebase.storage.TaskState.PAUSED:
-                  console.log("Upload is paused");
+                  // console.log("Upload is paused");
                   break;
                 case firebase.storage.TaskState.RUNNING:
-                  console.log("Upload is running");
+                  // console.log("Upload is running");
                   break;
               }
             },

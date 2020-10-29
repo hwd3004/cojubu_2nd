@@ -7,22 +7,37 @@ import {
   FormGroup,
   FormLabel,
 } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
-
+import { useHistory, useRouteMatch } from "react-router-dom";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
 import { editorConfiguration } from "components/editor/EditorConfig";
 import MyInit from "components/editor/UploadAdapter.js";
-import { dbService } from "fbase";
+import { authService, dbService } from "fbase";
+import moment from "moment";
 
-const CoinPost = ({ isLoggedIn }) => {
+const PostWrite = ({ isLoggedIn, myNickname }) => {
   const history = useHistory();
+  const match = useRouteMatch();
+  const { path } = match;
+
+  console.log(path);
+
+  let DB_NAME, DIV_CLASS_NAME, CATEGORY;
+
+  if (path === "/CoinPostWrite") {
+    DB_NAME = "CoinPostDB";
+    DIV_CLASS_NAME = "CoinPost";
+    CATEGORY = "코인"
+  } else if (path === "/StockPostWrite") {
+    DB_NAME = "StockPostDB";
+    DIV_CLASS_NAME = "StockPost";
+    CATEGORY = "주식"
+  }
 
   const [form, setValues] = useState({
     title: "",
     contents: "",
     fileUrl: "",
-    category: "",
   });
 
   const onChange = (e) => {
@@ -34,17 +49,22 @@ const CoinPost = ({ isLoggedIn }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    // const { title, contents, fileUrl, category } = form;
 
-    const newCoinPost = {
+    const newPost = {
       title: form.title,
       contents: form.contents,
       fileUrl: form.fileUrl,
-      category: form.category,
-      createdAt: Date.now(),
+      category: CATEGORY,
+      createdAt: moment().format("YYYY-MM-DD hh:mm:ss"),
+      creatorUid: authService.currentUser.uid,
+      creatorNickname: `${myNickname}`,
+      upVote: 0,
+      downVOte: 0,
+      comment: [],
+      views: 0,
     };
 
-    await dbService.collection("CoinPostDB").add(newCoinPost);
+    await dbService.collection(`${DB_NAME}`).add(newPost);
   };
 
   const getDataFromCKEditor = (event, editor) => {
@@ -85,26 +105,9 @@ const CoinPost = ({ isLoggedIn }) => {
   };
 
   return (
-    <div className="CoinPost">
+    <div className={`${DIV_CLASS_NAME}`}>
       글쓰기 폼<div>{isLoggedIn ? null : history.push("/")}</div>
       <div className="container">
-        {/* <form onSubmit={onSubmit}>
-          <p>제목 입력</p>
-          <input type="text" name="title" onChange={onChange}></input>
-
-          <p>카테고리</p>
-          <input type="text" name="category" onChange={onChange}></input>
-
-          <p>내용 입력</p>
-          <CKEditor
-            editor={ClassicEditor}
-            config={editorConfiguration}
-            onInit={MyInit}
-            onBlur={getDataFromCKEditor}
-          />
-          <input type="submit" value="작성" ></input>
-        </form> */}
-
         <Form onSubmit={onSubmit}>
           <FormGroup>
             <FormLabel>Title</FormLabel>
@@ -112,16 +115,6 @@ const CoinPost = ({ isLoggedIn }) => {
               type="text"
               name="title"
               id="title"
-              onChange={onChange}
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <FormLabel>Category</FormLabel>
-            <FormControl
-              type="text"
-              name="category"
-              id="category"
               onChange={onChange}
             />
           </FormGroup>
@@ -150,4 +143,4 @@ const CoinPost = ({ isLoggedIn }) => {
   );
 };
 
-export default CoinPost;
+export default PostWrite;

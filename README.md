@@ -153,3 +153,9 @@ style-loader 2.0.0 버전을 지우고, npm i style-loader@1.2.1
 npm i moment
 
 닉네임 표시 컴포넌트 수정
+
+---
+
+# 19. 각 게시판마다 글쓰기 기능을 PostWrite 컴포넌트 하나로 할수있도록 작업
+
+PostWrite 안에 UploadAdaptor를 넣는 실험을 해야함

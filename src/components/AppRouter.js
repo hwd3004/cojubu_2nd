@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { Link, Redirect, Route, Switch } from "react-router-dom";
 import Coin from "routes/Coin";
-import CoinPost from "routes/CoinPost";
+import PostWrite from "routes/PostWrite";
 import Home from "routes/Home";
 import SignUp from "routes/SignUp";
 import Skyrocket from "routes/Skyrocket";
@@ -113,15 +113,21 @@ const AppRouter = ({ isLoggedIn }) => {
         <Route exact path="/Skyrocket">
           <Skyrocket />
         </Route>
+
         <Route path="/Coin">
           <Coin exact isLoggedIn={isLoggedIn} />
         </Route>
-        <Route path="/CoinPost">
-          <CoinPost exact isLoggedIn={isLoggedIn} />
+        <Route path="/CoinPostWrite">
+          <PostWrite exact isLoggedIn={isLoggedIn} myNickname={myNickname} />
         </Route>
+
         <Route path="/Stock">
           <Stock exact isLoggedIn={isLoggedIn} />
         </Route>
+        <Route path="/StockPostWrite">
+          <PostWrite exact isLoggedIn={isLoggedIn} myNickname={myNickname} />
+        </Route>
+        
         <Redirect from="*" to="/" />
       </Switch>
     </div>

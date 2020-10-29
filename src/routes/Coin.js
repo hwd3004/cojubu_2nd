@@ -10,7 +10,7 @@ const Coin = ({ isLoggedIn }) => {
       <div>글목록</div>
 
       {isLoggedIn ? (
-        <Button as={Link} to="/CoinPost">
+        <Button as={Link} to="/CoinPostWrite">
           글쓰기
         </Button>
       ) : (
