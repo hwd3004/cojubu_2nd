@@ -56,10 +56,9 @@ import "@ckeditor/ckeditor5-build-classic/build/translations/ko";
 
 import { storageService } from "fbase";
 
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 
-dotenv.config();
-
+// dotenv.config();
 
 export const editorConfiguration = {
   plugins: [
@@ -309,7 +308,7 @@ export const editorConfiguration = {
   simpleUpload: {
     // uploadUrl: `${process.env.REACT_APP_BASIC_SERVER_URL}/api/posts/image`,
     // uploadUrl: `${process.env.REACT_APP_STORAGE_BUCKET}/api/posts/image`,
-    uploadUrl: storageService.ref().child(`api/posts/image`),
+    uploadUrl: storageService.ref().child(`post`),
 
     // Headers sent along with the XMLHttpRequest to the upload server.
 

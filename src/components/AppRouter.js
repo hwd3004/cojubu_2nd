@@ -1,11 +1,11 @@
-/* eslint-disable no-unused-vars */
-import { authService } from "fbase";
-import React, { useState } from "react";
+import { authService, dbService } from "fbase";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link, Redirect, Route, Switch } from "react-router-dom";
 import Coin from "routes/Coin";
 import CoinPost from "routes/CoinPost";
 import Home from "routes/Home";
+import PostContent from "routes/PostContent";
 import SignUp from "routes/SignUp";
 import Skyrocket from "routes/Skyrocket";
 import Stock from "routes/Stock";
@@ -36,6 +36,25 @@ const AppRouter = ({ isLoggedIn }) => {
     }
   };
 
+  //
+  //
+  const [myNickname, setMyNickname] = useState("");
+
+  const myProfile = () => {
+    const userRef = dbService
+      .collection("userDB")
+      .doc(`${authService.currentUser.email}`);
+
+    userRef.get().then((doc) => {
+      setMyNickname(doc.data().nickname);
+    });
+  };
+
+  useEffect(() => {
+    myProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="AppRouter">
       <div className="header">
@@ -44,7 +63,7 @@ const AppRouter = ({ isLoggedIn }) => {
         </Button>
         {isLoggedIn ? (
           <div>
-            <Profile />
+            <Profile myNickname={myNickname} />
           </div>
         ) : (
           <div>
@@ -94,14 +113,23 @@ const AppRouter = ({ isLoggedIn }) => {
         <Route exact path="/Skyrocket">
           <Skyrocket />
         </Route>
-        <Route path="/Coin">
-          <Coin exact isLoggedIn={isLoggedIn} />
+        <Route exact path="/Coin">
+          <Coin isLoggedIn={isLoggedIn} />
         </Route>
         <Route path="/CoinPost">
-          <CoinPost exact isLoggedIn={isLoggedIn} />
+          <CoinPost isLoggedIn={isLoggedIn} myNickname={myNickname} />
         </Route>
         <Route path="/Stock">
-          <Stock exact isLoggedIn={isLoggedIn} />
+          <Stock isLoggedIn={isLoggedIn} />
+        </Route>
+        <Route path="/StockPost">
+          <CoinPost isLoggedIn={isLoggedIn} myNickname={myNickname} />
+        </Route>
+        <Route path="/Coin/:id">
+          <PostContent />
+        </Route>
+        <Route path="/Stock/:id">
+          <PostContent />
         </Route>
         <Redirect from="*" to="/" />
       </Switch>

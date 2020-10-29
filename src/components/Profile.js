@@ -1,37 +1,33 @@
-import { authService, dbService } from "fbase";
-import React, { useEffect, useState } from "react";
+// import { authService, dbService } from "fbase";
+// import React, { useEffect, useState } from "react";
+import { authService } from "fbase";
+import React from "react";
 import { Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
-const Profile = () => {
+const Profile = ({myNickname}) => {
   const history = useHistory();
   const onLogOut = () => {
     authService.signOut();
     history.push("/");
   };
 
-  const [myNickname, setMyNickname] = useState("");
+  // const [myNickname, setMyNickname] = useState("");
 
-  const myProfile = () => {
-    const userRef = dbService
-      .collection("userDB")
-      .doc(`${authService.currentUser.email}`);
+  // const myProfile = () => {
+  //   const userRef = dbService
+  //     .collection("userDB")
+  //     .doc(`${authService.currentUser.email}`);
 
-    userRef.get().then((doc) => {
-      setMyNickname(doc.data().nickname);
-    });
-  };
+  //   userRef.get().then((doc) => {
+  //     setMyNickname(doc.data().nickname);
+  //   });
+  // };
 
-  // dbService.collection('postDB').get().then(function(query){
-  //   query.forEach(function(doc){
-  //     console.log(`${doc.id} -> ${doc.data()}`)
-  //   })
-  // })
-
-  useEffect(() => {
-    myProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   myProfile();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <div className="Profile">

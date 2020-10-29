@@ -16,76 +16,13 @@ import { editorConfiguration } from "components/editor/EditorConfig";
 import { authService, dbService } from "fbase";
 import moment from "moment";
 
-import * as firebase from "firebase";
 import dotenv from "dotenv";
+import MyInit from "components/editor/UploadAdapter";
 dotenv.config();
 
-const DB_NAME = "CoinPostDB";
-const DIV_CLASS_NAME = "CoinPost";
-const CATEGORY = "coin";
-
-class MyUploadAdapter {
-  constructor(loader) {
-    this.loader = loader;
-  }
-
-  upload() {
-    let metadata = {
-      contentType: "image/jpeg",
-    };
-
-    return this.loader.file.then(
-      (file) =>
-        new Promise((resolve, reject) => {
-          let storage = firebase.storage().ref();
-          let uploadTask = storage
-            .child(
-              `${DB_NAME}/${moment().format("YYYYMMDD")}/${
-                authService.currentUser.uid
-              }/${moment().format("YYYYMMDD hh:mm:ss")}`
-            )
-            .put(file, metadata);
-
-          uploadTask.on(
-            firebase.storage.TaskEvent.STATE_CHANGED,
-            // function (snapshot) {
-            //   console.log(snapshot.totalBytes);
-            //   if (snapshot.bytesTransferred >= 1048576) {
-            //     // 5242880
-            //   }
-            // },
-            function (error) {
-              // eslint-disable-next-line default-case
-              switch (error.code) {
-                case "storage/unauthorized":
-                  reject(" User doesn't have permission to access the object");
-                  break;
-
-                case "storage/canceled":
-                  reject("User canceled the upload");
-                  break;
-
-                case "storage/unknown":
-                  reject(
-                    "Unknown error occurred, inspect error.serverResponse"
-                  );
-                  break;
-              }
-            },
-            function () {
-              // Upload completed successfully, now we can get the download URL
-              uploadTask.snapshot.ref
-                .getDownloadURL()
-                .then(function (downloadURL) {
-                  // console.log("File available at", downloadURL);
-                  resolve({ default: downloadURL });
-                });
-            }
-          );
-        })
-    );
-  }
-}
+const DB_NAME = "StockPostDB";
+const DIV_CLASS_NAME = "StockPost";
+const CATEGORY = "stock";
 
 const CoinPost = ({ isLoggedIn, myNickname }) => {
   const history = useHistory();
@@ -192,14 +129,14 @@ const CoinPost = ({ isLoggedIn, myNickname }) => {
           <CKEditor
             editor={ClassicEditor}
             config={editorConfiguration}
-            // onInit={MyInit}
-            onInit={(editor) => {
-              editor.plugins.get("FileRepository").createUploadAdapter = (
-                loader
-              ) => {
-                return new MyUploadAdapter(loader);
-              };
-            }}
+            onInit={MyInit}
+            // onInit={(editor) => {
+            //   editor.plugins.get("FileRepository").createUploadAdapter = (
+            //     loader
+            //   ) => {
+            //     return new MyUploadAdapter(loader);
+            //   };
+            // }}
             onBlur={getDataFromCKEditor}
           />
         </FormGroup>

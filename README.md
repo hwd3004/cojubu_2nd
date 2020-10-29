@@ -145,3 +145,9 @@ style-loader 2.0.0 버전을 지우고, npm i style-loader@1.2.1
 ---
 
 # 16. 파이어베이스, 리액트, CKEditor 연결 성공
+
+---
+
+# 17. ckeditor로 글 쓸 때 이미지 저장 에러
+
+npm i moment

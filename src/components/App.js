@@ -22,7 +22,9 @@ const App = () => {
 
   return (
     <div className="App">
-      {init ? <AppRouter isLoggedIn={isLoggedIn} /> : null}
+      <div className="container">
+        {init ? <AppRouter isLoggedIn={isLoggedIn} /> : null}
+      </div>
     </div>
   );
 };
