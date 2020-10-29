@@ -159,3 +159,7 @@ npm i moment
 # 19. 각 게시판마다 글쓰기 기능을 PostWrite 컴포넌트 하나로 할수있도록 작업
 
 PostWrite 안에 UploadAdaptor를 넣는 실험을 해야함
+
+---
+
+# 20. 일단 커밋하여 저장

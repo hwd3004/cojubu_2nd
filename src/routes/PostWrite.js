@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
   Button,
@@ -18,21 +18,29 @@ import moment from "moment";
 const PostWrite = ({ isLoggedIn, myNickname }) => {
   const history = useHistory();
   const match = useRouteMatch();
-  const { path } = match;
 
-  console.log(path);
+  const [something, setSomething] = useState({});
 
-  let DB_NAME, DIV_CLASS_NAME, CATEGORY;
+  useEffect(() => {
+    const { path } = match;
 
-  if (path === "/CoinPostWrite") {
-    DB_NAME = "CoinPostDB";
-    DIV_CLASS_NAME = "CoinPost";
-    CATEGORY = "코인"
-  } else if (path === "/StockPostWrite") {
-    DB_NAME = "StockPostDB";
-    DIV_CLASS_NAME = "StockPost";
-    CATEGORY = "주식"
-  }
+    if (path === "/CoinPostWrite") {
+      setSomething({
+        DB_NAME: "CoinPostDB",
+        DIV_CLASS_NAME: "CoinPost",
+        CATEGORY: "코인",
+      });
+    } else if (path === "/StockPostWrite") {
+      setSomething({
+        DB_NAME: "StockPostDB",
+        DIV_CLASS_NAME: "StockPost",
+        CATEGORY: "주식",
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const { DB_NAME, DIV_CLASS_NAME, CATEGORY } = something;
 
   const [form, setValues] = useState({
     title: "",
@@ -55,7 +63,7 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
       contents: form.contents,
       fileUrl: form.fileUrl,
       category: CATEGORY,
-      createdAt: moment().format("YYYY-MM-DD hh:mm:ss"),
+      createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
       creatorUid: authService.currentUser.uid,
       creatorNickname: `${myNickname}`,
       upVote: 0,

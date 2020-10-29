@@ -11,15 +11,12 @@ class MyUploadAdapter {
 
   // Starts the upload process.
   upload() {
-    let metadata = {
-      contentType: "image/jpeg",
-    };
 
     return this.loader.file.then(
       (file) =>
         new Promise((resolve, reject) => {
           let storage = firebase.storage().ref();
-          let uploadTask = storage.child(`asd/${file.name}`).put(file, metadata);
+          let uploadTask = storage.child(`asd/${file.name}`).put(file);
 
           uploadTask.on(
             firebase.storage.TaskEvent.STATE_CHANGED,
