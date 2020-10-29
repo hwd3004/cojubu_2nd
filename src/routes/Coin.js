@@ -1,13 +1,9 @@
-import { dbService } from "fbase";
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
-import CoinPost from "./CoinPost";
+import { Link } from "react-router-dom";
 // import CKEditor from "ckeditor4-react";
 
 const Coin = ({ isLoggedIn }) => {
-
-
   return (
     <div className="Coin">
       <div>Coin</div>

@@ -145,3 +145,11 @@ style-loader 2.0.0 버전을 지우고, npm i style-loader@1.2.1
 ---
 
 # 16. 파이어베이스, 리액트, CKEditor 연결 성공
+
+---
+
+# 18. 16 브랜치에서 출발
+
+npm i moment
+
+닉네임 표시 컴포넌트 수정
