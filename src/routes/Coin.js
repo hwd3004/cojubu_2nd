@@ -11,8 +11,9 @@ const Coin = ({ isLoggedIn }) => {
   let DB_NAME, DIV_CLASS_NAME, CATEGORY, LINK_WRITE, LINK_TO;
 
   const { path } = match;
-
+  
   if (path === "/Coin") {
+  // if (path === "/Coin" || path === "/Coin/:id") {
     DB_NAME = "CoinPostDB";
     DIV_CLASS_NAME = "Coin";
     LINK_TO = "Coin";
@@ -53,37 +54,55 @@ const Coin = ({ isLoggedIn }) => {
       <div>글목록</div>
 
       <Table>
-        {list.map((item) => {
-          const {
-            fileUrl,
-            title,
-            creatorNickname,
-            createdAt,
-            upVote,
-            id,
-          } = item;
+        <thead>
+          <tr>
+            <th colSpan="3">제목</th>
+            <th>글쓴이</th>
+            <th>날짜</th>
+            <th>조회수</th>
+            <th>추천</th>
+          </tr>
+        </thead>
+        <tbody>
+          {list.map((item) => {
+            const {
+              fileUrl,
+              title,
+              creatorNickname,
+              createdAt,
+              upVote,
+              id,
+              views,
+              comment,
+            } = item;
 
-          const { downloadTokens } = fileUrl;
+            const { downloadTokens } = fileUrl;
 
-          return (
-            <tr>
-              <td>
-                <img
-                  src={`${fileUrl}?alt=media&amp;token=${downloadTokens}`}
-                  width="50px;"
-                  alt=""
-                />
-              </td>
-              <td>
-                <Link to={`/${LINK_TO}/${id}`}>{title}</Link>
-              </td>
-              <td>{creatorNickname}</td>
-              <td>{createdAt}</td>
-              <td>{upVote}</td>
-            </tr>
-          );
-        })}
+            return (
+              <tr>
+                <td>
+                  <img
+                    src={`${fileUrl}?alt=media&amp;token=${downloadTokens}`}
+                    width="50px;"
+                    alt=""
+                  />
+                </td>
+                <td>
+                  <Link to={`/${LINK_TO}/${id}`}>{title}</Link>
+                </td>
+                <td>{comment.length !== 0 && `+${comment.length}`}
+                </td>
+                <td>{creatorNickname}</td>
+                <td>{createdAt}</td>
+                <td>{views}</td>
+                <td>{upVote !== 0 && upVote}</td>
+              </tr>
+            );
+          })}
+        </tbody>
       </Table>
+      <p>검색창 넣을 예정</p>
+      <p>페이지네이션 넣을 예정</p>
 
       {isLoggedIn ? (
         <Button as={Link} to={`/${LINK_WRITE}`}>

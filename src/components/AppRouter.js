@@ -12,6 +12,7 @@ import Stock from "routes/Stock";
 import Profile from "./Profile";
 import CoinContent from "routes/CoinContent";
 import StockContent from "routes/StockContent";
+import Footer from "./Footer";
 
 const AppRouter = ({ isLoggedIn }) => {
   const [email, setEmail] = useState("");
@@ -142,6 +143,8 @@ const AppRouter = ({ isLoggedIn }) => {
 
           <Redirect from="*" to="/" />
         </Switch>
+        
+        <Footer />
       </div>
     </div>
   );

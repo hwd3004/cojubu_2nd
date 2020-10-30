@@ -1,6 +1,7 @@
 import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouteMatch } from "react-router-dom";
+import Coin from "./Coin";
 
 const CoinContent = () => {
   const { id } = useParams();
@@ -39,12 +40,15 @@ const CoinContent = () => {
   const { contents, title, createdAt, creatorNickname } = document;
 
   return (
-    <div className={`${DIV_CLASS_NAME}`}>
-      <p>{title}</p>
-      <p>{createdAt}</p>
-      <p>{creatorNickname}</p>
-      <div dangerouslySetInnerHTML={{ __html: contents }}></div>
-    </div>
+    <>
+      <div className={`${DIV_CLASS_NAME}`}>
+        <p>{title}</p>
+        <p>{createdAt}</p>
+        <p>{creatorNickname}</p>
+        <div dangerouslySetInnerHTML={{ __html: contents }}></div>
+      </div>
+      {/* <Coin /> */}
+    </>
   );
 };
 
