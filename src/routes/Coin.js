@@ -63,12 +63,16 @@ const Coin = ({ isLoggedIn }) => {
             id,
           } = item;
 
+          const { downloadTokens } = fileUrl;
+
           return (
             <tr>
               <td>
-                <Link to={`/${LINK_TO}/${id}`}>
-                  <img src={fileUrl} width="50px" alt="" />
-                </Link>
+                <img
+                  src={`${fileUrl}?alt=media&amp;token=${downloadTokens}`}
+                  width="50px;"
+                  alt=""
+                />
               </td>
               <td>
                 <Link to={`/${LINK_TO}/${id}`}>{title}</Link>

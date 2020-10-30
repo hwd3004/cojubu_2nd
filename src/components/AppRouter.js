@@ -10,6 +10,7 @@ import SignUp from "routes/SignUp";
 import Skyrocket from "routes/Skyrocket";
 import Stock from "routes/Stock";
 import Profile from "./Profile";
+import CoinContent from "routes/CoinContent";
 
 const AppRouter = ({ isLoggedIn }) => {
   const [email, setEmail] = useState("");
@@ -115,18 +116,21 @@ const AppRouter = ({ isLoggedIn }) => {
             <Skyrocket />
           </Route>
 
-          <Route path="/Coin">
-            <Coin exact isLoggedIn={isLoggedIn} />
+          <Route exact path="/Coin">
+            <Coin isLoggedIn={isLoggedIn} />
           </Route>
-          <Route path="/CoinPostWrite">
-            <PostWrite exact isLoggedIn={isLoggedIn} myNickname={myNickname} />
+          <Route exact path="/CoinPostWrite">
+            <PostWrite isLoggedIn={isLoggedIn} myNickname={myNickname} />
+          </Route>
+          <Route exact path="/Coin/:id">
+            <CoinContent isLoggedIn={isLoggedIn} myNickname={myNickname} />
           </Route>
 
-          <Route path="/Stock">
-            <Stock exact isLoggedIn={isLoggedIn} />
+          <Route exact path="/Stock">
+            <Stock isLoggedIn={isLoggedIn} />
           </Route>
-          <Route path="/StockPostWrite">
-            <PostWrite exact isLoggedIn={isLoggedIn} myNickname={myNickname} />
+          <Route exact path="/StockPostWrite">
+            <PostWrite isLoggedIn={isLoggedIn} myNickname={myNickname} />
           </Route>
 
           <Redirect from="*" to="/" />

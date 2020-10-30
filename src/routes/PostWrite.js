@@ -73,6 +73,8 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
     };
 
     await dbService.collection(`${DB_NAME}`).add(newPost);
+
+    
   };
 
   const getDataFromCKEditor = (event, editor) => {
