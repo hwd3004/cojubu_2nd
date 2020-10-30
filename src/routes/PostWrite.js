@@ -37,7 +37,7 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
         CATEGORY: "주식",
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { DB_NAME, DIV_CLASS_NAME, CATEGORY } = something;
@@ -115,38 +115,36 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
   return (
     <div className={`${DIV_CLASS_NAME}`}>
       글쓰기 폼<div>{isLoggedIn ? null : history.push("/")}</div>
-      <div className="container">
-        <Form onSubmit={onSubmit}>
-          <FormGroup>
-            <FormLabel>Title</FormLabel>
-            <FormControl
-              type="text"
-              name="title"
-              id="title"
-              onChange={onChange}
-            />
-          </FormGroup>
+      <Form onSubmit={onSubmit}>
+        <FormGroup>
+          <FormLabel>Title</FormLabel>
+          <FormControl
+            type="text"
+            name="title"
+            id="title"
+            onChange={onChange}
+          />
+        </FormGroup>
 
-          <FormGroup className="mb-3">
-            <FormLabel>Content</FormLabel>
-            <CKEditor
-              editor={ClassicEditor}
-              config={editorConfiguration}
-              onInit={MyInit}
-              onBlur={getDataFromCKEditor}
-            />
-          </FormGroup>
+        <FormGroup className="mb-3">
+          <FormLabel>Content</FormLabel>
+          <CKEditor
+            editor={ClassicEditor}
+            config={editorConfiguration}
+            onInit={MyInit}
+            onBlur={getDataFromCKEditor}
+          />
+        </FormGroup>
 
-          <Button
-            type="submit"
-            color="success"
-            block
-            className="mt-3 col-md-2 offset-md-10 mb-3"
-          >
-            제출
-          </Button>
-        </Form>
-      </div>
+        <Button
+          type="submit"
+          color="success"
+          block
+          className="mt-3 col-md-2 offset-md-10 mb-3"
+        >
+          제출
+        </Button>
+      </Form>
     </div>
   );
 };

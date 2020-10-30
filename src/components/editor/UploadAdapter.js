@@ -1,7 +1,5 @@
 import * as firebase from "firebase";
-
-import dotenv from "dotenv";
-dotenv.config();
+import moment from "moment";
 
 class MyUploadAdapter {
   constructor(loader) {
@@ -11,19 +9,24 @@ class MyUploadAdapter {
 
   // Starts the upload process.
   upload() {
-
     return this.loader.file.then(
       (file) =>
         new Promise((resolve, reject) => {
           let storage = firebase.storage().ref();
-          let uploadTask = storage.child(`asd/${file.name}`).put(file);
+          let uploadTask = storage
+            .child(
+              `${moment().format("YYMMDD")}/${moment().format("HHmm")}/${
+                file.name
+              }`
+            )
+            .put(file);
 
           uploadTask.on(
             firebase.storage.TaskEvent.STATE_CHANGED,
             function (snapshot) {
               // Get task progress, including the number of  bytes to be uploaded
               // var progress =
-                // (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              // (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
               // console.log(`Upload is ${progress}% done`);
 
