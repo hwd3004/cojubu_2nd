@@ -1,63 +1,88 @@
+import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { Link, useRouteMatch } from "react-router-dom";
 
 const Coin = ({ isLoggedIn }) => {
-  // const getNweets = async () => {
-  //     const dbNweets = await dbService.collection("nweets").get();
-  //     // dbNweets.forEach( (document) => console.log(document.data()) )
-
-  //     dbNweets.forEach( (document) => {
-  //         const nweetObject = {
-  //             ...document.data(),
-  //             id : document.id,
-  //         }
-  //         // setNweets( (prev) => [nweetObject, ...prev] )
-  //         setNweets( (prev) => [...prev, nweetObject] )
-  //     } )
-  // }
-
-  // useEffect(() => {
-  //     getNweets();
-  //     dbService.collection("nweets").onSnapshot( snapshot => {
-  //         console.log("something happened")
-  //     } )
-  // }, [])
-
   const match = useRouteMatch();
 
-  const [something, setSomething] = useState({});
+  const [list, setList] = useState([]);
+
+  let DB_NAME, DIV_CLASS_NAME, CATEGORY, LINK_WRITE, LINK_TO;
+
+  const { path } = match;
+
+  if (path === "/Coin") {
+    DB_NAME = "CoinPostDB";
+    DIV_CLASS_NAME = "Coin";
+    LINK_TO = "Coin";
+    CATEGORY = "코인";
+    LINK_WRITE = "CoinPostWrite";
+  } else if (path === "/Stock") {
+    DB_NAME = "StockPostDB";
+    DIV_CLASS_NAME = "Stock";
+    LINK_TO = "Stock";
+    CATEGORY = "주식";
+    LINK_WRITE = "StockPostWrite";
+  }
+
+  const getPost = async () => {
+    const postDB = await dbService
+      .collection(`${DB_NAME}`)
+      .orderBy("createdAt", "desc")
+      .get();
+
+    postDB.forEach((doc) => {
+      // console.log(doc.data());
+      const postObj = {
+        id: doc.id,
+        ...doc.data(),
+      };
+      setList((prev) => [...prev, postObj]);
+    });
+  };
 
   useEffect(() => {
-    const { path } = match;
-
-    if (path === "/Coin") {
-      setSomething({
-        DB_NAME: "CoinPostDB",
-        DIV_CLASS_NAME: "Coin",
-        CATEGORY: "코인",
-        LINK_WRITE: "CoinPostWrite",
-      });
-    } else if (path === "/Stock") {
-      setSomething({
-        DB_NAME: "StockPostDB",
-        DIV_CLASS_NAME: "Stock",
-        CATEGORY: "주식",
-        LINK_WRITE: "StockPostWrite",
-      });
-    }
+    getPost();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const { DIV_CLASS_NAME, CATEGORY, LINK_WRITE } = something;
 
   return (
     <div className={`${DIV_CLASS_NAME}`}>
       <div>{CATEGORY}</div>
       <div>글목록</div>
 
+      <Table>
+        {list.map((item) => {
+          const {
+            fileUrl,
+            title,
+            creatorNickname,
+            createdAt,
+            upVote,
+            id,
+          } = item;
+
+          return (
+            <tr>
+              <td>
+                <Link to={`/${LINK_TO}/${id}`}>
+                  <img src={fileUrl} width="50px" alt="" />
+                </Link>
+              </td>
+              <td>
+                <Link to={`/${LINK_TO}/${id}`}>{title}</Link>
+              </td>
+              <td>{creatorNickname}</td>
+              <td>{createdAt}</td>
+              <td>{upVote}</td>
+            </tr>
+          );
+        })}
+      </Table>
+
       {isLoggedIn ? (
-        <Button as={Link} to={`${LINK_WRITE}`}>
+        <Button as={Link} to={`/${LINK_WRITE}`}>
           글쓰기
         </Button>
       ) : (
