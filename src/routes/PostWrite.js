@@ -116,6 +116,7 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
     <div className={`${DIV_CLASS_NAME}`}>
       글쓰기 폼<div>{isLoggedIn ? null : history.push("/")}</div>
       <div className="container">
+        <p>{DIV_CLASS_NAME}</p>
         <Form onSubmit={onSubmit}>
           <FormGroup>
             <FormLabel>Title</FormLabel>
