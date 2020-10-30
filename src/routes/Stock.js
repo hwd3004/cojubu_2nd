@@ -1,9 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
+import { Link, useRouteMatch } from "react-router-dom";
 
-const Stock = () => {
+const Stock = ({ isLoggedIn }) => {
+  
+
+  const match = useRouteMatch();
+
+  const [something, setSomething] = useState({});
+
+  useEffect(() => {
+    const { path } = match;
+
+    if (path === "/Coin") {
+      setSomething({
+        DB_NAME: "CoinPostDB",
+        DIV_CLASS_NAME: "Coin",
+        CATEGORY: "코인",
+        LINK_WRITE: "CoinPostWrite",
+      });
+    } else if (path === "/Stock") {
+      setSomething({
+        DB_NAME: "StockPostDB",
+        DIV_CLASS_NAME: "Stock",
+        CATEGORY: "주식",
+        LINK_WRITE: "StockPostWrite",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const { DIV_CLASS_NAME, CATEGORY, LINK_WRITE } = something;
+
   return (
-    <div className="Stock">
-      <div>Stock</div>
+    <div className={`${DIV_CLASS_NAME}`}>
+      <div>{CATEGORY}</div>
+      <div>글목록</div>
+
+      {isLoggedIn ? (
+        <Button as={Link} to={`${LINK_WRITE}`}>
+          글쓰기
+        </Button>
+      ) : (
+        <div>글못씀</div>
+      )}
     </div>
   );
 };
