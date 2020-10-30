@@ -2,7 +2,7 @@ import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouteMatch } from "react-router-dom";
 
-const CoinContent = () => {
+const StockContent = () => {
   const { id } = useParams();
   const match = useRouteMatch();
   const { path } = match;
@@ -48,4 +48,4 @@ const CoinContent = () => {
   );
 };
 
-export default CoinContent;
+export default StockContent;

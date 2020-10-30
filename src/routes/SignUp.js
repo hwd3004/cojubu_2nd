@@ -1,14 +1,13 @@
-/* eslint-disable no-unused-vars */
 import { authService, dbService } from "fbase";
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const history = useHistory();
+  // const history = useHistory();
 
   const onChange = (event) => {
     const {
@@ -38,7 +37,8 @@ const SignUp = () => {
         .doc(email)
         .set({ uid: authService.currentUser.uid, email, password, nickname });
 
-      history.push("/");
+      // history.push("/");
+      window.location.replace("/");
     } catch (error) {
       setError(error);
     }

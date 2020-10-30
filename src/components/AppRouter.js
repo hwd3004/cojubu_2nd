@@ -11,6 +11,7 @@ import Skyrocket from "routes/Skyrocket";
 import Stock from "routes/Stock";
 import Profile from "./Profile";
 import CoinContent from "routes/CoinContent";
+import StockContent from "routes/StockContent";
 
 const AppRouter = ({ isLoggedIn }) => {
   const [email, setEmail] = useState("");
@@ -32,6 +33,7 @@ const AppRouter = ({ isLoggedIn }) => {
     event.preventDefault();
     try {
       await authService.signInWithEmailAndPassword(email, password);
+      window.location.reload();
     } catch (error) {
       alert(error);
     }
@@ -42,13 +44,15 @@ const AppRouter = ({ isLoggedIn }) => {
   const [myNickname, setMyNickname] = useState("");
 
   const myProfile = () => {
-    const userRef = dbService
-      .collection("userDB")
-      .doc(`${authService.currentUser.email}`);
+    if (isLoggedIn) {
+      const userRef = dbService
+        .collection("userDB")
+        .doc(`${authService.currentUser.email}`);
 
-    userRef.get().then((doc) => {
-      setMyNickname(doc.data().nickname);
-    });
+      userRef.get().then((doc) => {
+        setMyNickname(doc.data().nickname);
+      });
+    }
   };
 
   useEffect(() => {
@@ -131,6 +135,9 @@ const AppRouter = ({ isLoggedIn }) => {
           </Route>
           <Route exact path="/StockPostWrite">
             <PostWrite isLoggedIn={isLoggedIn} myNickname={myNickname} />
+          </Route>
+          <Route exact path="/Stock/:id">
+            <StockContent isLoggedIn={isLoggedIn} myNickname={myNickname} />
           </Route>
 
           <Redirect from="*" to="/" />

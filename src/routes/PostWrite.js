@@ -14,6 +14,7 @@ import { editorConfiguration } from "components/editor/EditorConfig";
 import MyInit from "components/editor/UploadAdapter.js";
 import { authService, dbService } from "fbase";
 import moment from "moment";
+import shortid from "shortid";
 
 const PostWrite = ({ isLoggedIn, myNickname }) => {
   const history = useHistory();
@@ -29,18 +30,20 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
         DB_NAME: "CoinPostDB",
         DIV_CLASS_NAME: "CoinPost",
         CATEGORY: "코인",
+        LINK_TO: "Coin",
       });
     } else if (path === "/StockPostWrite") {
       setSomething({
         DB_NAME: "StockPostDB",
         DIV_CLASS_NAME: "StockPost",
         CATEGORY: "주식",
+        LINK_TO: "Stock",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { DB_NAME, DIV_CLASS_NAME, CATEGORY } = something;
+  const { DB_NAME, DIV_CLASS_NAME, CATEGORY, LINK_TO } = something;
 
   const [form, setValues] = useState({
     title: "",
@@ -58,6 +61,8 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
+    const GET_URL = shortid.generate();
+
     const newPost = {
       title: form.title,
       contents: form.contents,
@@ -72,9 +77,10 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
       views: 0,
     };
 
-    await dbService.collection(`${DB_NAME}`).add(newPost);
+    // await dbService.collection(`${DB_NAME}`).add(newPost);
+    await dbService.collection(`${DB_NAME}`).doc(GET_URL).set(newPost);
 
-    
+    history.push(`/${LINK_TO}/${GET_URL}`);
   };
 
   const getDataFromCKEditor = (event, editor) => {
