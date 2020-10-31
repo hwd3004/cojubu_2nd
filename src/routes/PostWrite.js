@@ -11,7 +11,8 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
 import { editorConfiguration } from "components/editor/EditorConfig";
-import MyInit from "components/editor/UploadAdapter.js";
+// import MyInit from "components/editor/UploadAdapter.js";
+import MyUploadAdapter from "components/editor/UploadAdapter.js";
 import { authService, dbService } from "fbase";
 import moment from "moment";
 import shortid from "shortid";
@@ -21,6 +22,14 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
   const match = useRouteMatch();
 
   const [something, setSomething] = useState({});
+
+  let db_name;
+
+  if (match.path === "/CoinPostWrite") {
+    db_name = "CoinPostDB";
+  } else if (match.path === "/StockPostWrite") {
+    db_name = "StockPostDB";
+  }
 
   useEffect(() => {
     const { path } = match;
@@ -139,7 +148,15 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
           <CKEditor
             editor={ClassicEditor}
             config={editorConfiguration}
-            onInit={MyInit}
+            // onInit={MyInit}
+            onInit={(editor) => {
+              editor.plugins.get("FileRepository").createUploadAdapter = (
+                loader
+              ) => {
+                // Configure the URL to the upload script in your back-end here!
+                return new MyUploadAdapter(loader, db_name);
+              };
+            }}
             onBlur={getDataFromCKEditor}
           />
         </FormGroup>

@@ -2,20 +2,22 @@ import * as firebase from "firebase";
 import moment from "moment";
 
 class MyUploadAdapter {
-  constructor(loader) {
+  constructor(loader, db_name) {
     // The file loader instance to use during the upload.
     this.loader = loader;
+    this.db_name = db_name;
   }
 
   // Starts the upload process.
   upload() {
+    console.log(this.db_name)
     return this.loader.file.then(
       (file) =>
         new Promise((resolve, reject) => {
           let storage = firebase.storage().ref();
           let uploadTask = storage
             .child(
-              `${moment().format("YYMMDD")}/${moment().format("HHmm")}/${
+              `${this.db_name}/${moment().format("YYMMDD")}/${moment().format("HHmm")}/${
                 file.name
               }`
             )
@@ -75,11 +77,14 @@ class MyUploadAdapter {
   }
 }
 
-const MyInit = (editor) => {
-  editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-    // Configure the URL to the upload script in your back-end here!
-    return new MyUploadAdapter(loader);
-  };
-};
+export default MyUploadAdapter;
 
-export default MyInit;
+// const MyInit = (editor) => {
+//   editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+//     // Configure the URL to the upload script in your back-end here!
+//     return new MyUploadAdapter(loader);
+//   };
+// };
+
+
+// export default MyInit;
