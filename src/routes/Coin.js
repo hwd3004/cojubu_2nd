@@ -11,9 +11,9 @@ const Coin = ({ isLoggedIn }) => {
   let DB_NAME, DIV_CLASS_NAME, CATEGORY, LINK_WRITE, LINK_TO;
 
   const { path } = match;
-  
+
   if (path === "/Coin") {
-  // if (path === "/Coin" || path === "/Coin/:id") {
+    // if (path === "/Coin" || path === "/Coin/:id") {
     DB_NAME = "CoinPostDB";
     DIV_CLASS_NAME = "Coin";
     LINK_TO = "Coin";
@@ -64,7 +64,7 @@ const Coin = ({ isLoggedIn }) => {
           </tr>
         </thead>
         <tbody>
-          {list.map((item) => {
+          {list.map((item, index) => {
             const {
               fileUrl,
               title,
@@ -79,7 +79,7 @@ const Coin = ({ isLoggedIn }) => {
             const { downloadTokens } = fileUrl;
 
             return (
-              <tr>
+              <tr key={index}>
                 <td>
                   <img
                     src={`${fileUrl}?alt=media&amp;token=${downloadTokens}`}
@@ -90,8 +90,7 @@ const Coin = ({ isLoggedIn }) => {
                 <td>
                   <Link to={`/${LINK_TO}/${id}`}>{title}</Link>
                 </td>
-                <td>{comment.length !== 0 && `+${comment.length}`}
-                </td>
+                <td>{comment.length !== 0 && `+${comment.length}`}</td>
                 <td>{creatorNickname}</td>
                 <td>{createdAt}</td>
                 <td>{views}</td>

@@ -129,6 +129,13 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
     }
   };
 
+  const postInit = (editor) => {
+    editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+      // Configure the URL to the upload script in your back-end here!
+      return new MyUploadAdapter(loader, db_name);
+    };
+  };
+
   return (
     <div className={`${DIV_CLASS_NAME}`}>
       글쓰기 폼<div>{isLoggedIn ? null : history.push("/")}</div>
@@ -148,16 +155,20 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
           <CKEditor
             editor={ClassicEditor}
             config={editorConfiguration}
+            //
             // onInit={MyInit}
-            onInit={(editor) => {
-              editor.plugins.get("FileRepository").createUploadAdapter = (
-                loader
-              ) => {
-                // Configure the URL to the upload script in your back-end here!
-                return new MyUploadAdapter(loader, db_name);
-              };
-            }}
+            //
+            // onInit={(editor) => {
+            //   editor.plugins.get("FileRepository").createUploadAdapter = (
+            //     loader
+            //   ) => {
+            //     // Configure the URL to the upload script in your back-end here!
+            //     return new MyUploadAdapter(loader, db_name);
+            //   };
+            // }}
+            //
             onBlur={getDataFromCKEditor}
+            onInit={postInit}
           />
         </FormGroup>
 

@@ -1,7 +1,7 @@
 import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouteMatch } from "react-router-dom";
-import Coin from "./Coin";
+// import Coin from "./Coin";
 
 const CoinContent = () => {
   const { id } = useParams();

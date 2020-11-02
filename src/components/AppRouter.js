@@ -34,7 +34,7 @@ const AppRouter = ({ isLoggedIn }) => {
     event.preventDefault();
     try {
       await authService.signInWithEmailAndPassword(email, password);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       alert(error);
     }
@@ -44,22 +44,42 @@ const AppRouter = ({ isLoggedIn }) => {
   //
   const [myNickname, setMyNickname] = useState("");
 
-  const myProfile = () => {
-    if (isLoggedIn) {
-      const userRef = dbService
-        .collection("userDB")
-        .doc(`${authService.currentUser.email}`);
+  // const myProfile = () => {
+  //   if (isLoggedIn) {
+  //     const userRef = dbService
+  //       .collection("userDB")
+  //       .doc(`${authService.currentUser.email}`);
 
-      userRef.get().then((doc) => {
-        setMyNickname(doc.data().nickname);
-      });
-    }
+  //     userRef.get().then((doc) => {
+  //       setMyNickname(doc.data().nickname);
+  //     });
+  //   }
+  // };
+
+  const getNickname = async () => {
+    const userRef = await dbService
+      .collection("userDB")
+      .doc(`${authService.currentUser.email}`);
+
+    await userRef.get().then((doc) => {
+      setMyNickname(doc.data().nickname);
+    });
   };
 
-  useEffect(() => {
-    myProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  if (isLoggedIn) {
+    // const userRef = dbService
+    //   .collection("userDB")
+    //   .doc(`${authService.currentUser.email}`);
+    // userRef.get().then((doc) => {
+    //   setMyNickname(doc.data().nickname);
+    // });
+    getNickname();
+  }
+
+  // useEffect(() => {
+  //   myProfile();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <div className="AppRouter">
@@ -143,7 +163,7 @@ const AppRouter = ({ isLoggedIn }) => {
 
           <Redirect from="*" to="/" />
         </Switch>
-        
+
         <Footer />
       </div>
     </div>
