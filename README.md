@@ -227,3 +227,21 @@ PostWrite 안에 UploadAdaptor를 넣는 실험을 해야함
 # 30. npm install node-sass@4.14.1
 
 node-sass의 최신버전 5는 에러가 뜬다
+
+---
+
+# 31. 리덕스 도입
+
+npm i redux react-redux redux-saga connected-react-router
+
+상태 관리의 redux
+
+redux를 리액트에서 사용하기 위한 react-redux
+
+비동기식 상태 관리를 위한 redux-saga
+
+redux를 사용해서 라우터를 관리해주는 connected-react-router
+
+npm i history@4.7.2
+
+src 폴더에 redux 폴더 - reducers, sagas 폴더 만듬
