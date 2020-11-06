@@ -221,3 +221,9 @@ PostWrite 안에 UploadAdaptor를 넣는 실험을 해야함
 ---
 
 # 29. 코드 수정
+
+---
+
+# 30. npm install node-sass@4.14.1
+
+node-sass의 최신버전 5는 에러가 뜬다

@@ -97,14 +97,14 @@ const AppRouter = ({ isLoggedIn }) => {
               <form onSubmit={onSubmit}>
                 <input
                   onChange={onChange}
-                  valeu={email}
+                  value={email}
                   name="email"
                   type="email"
                   placeholder="이메일"
                 ></input>
                 <input
                   onChange={onChange}
-                  email={password}
+                  value={password}
                   name="password"
                   type="password"
                   placeholder="패스워드"

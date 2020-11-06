@@ -13,6 +13,7 @@ const SignUp = () => {
     const {
       target: { name, value },
     } = event;
+    
     if (name === "email") {
       setEmail(value);
     } else if (name === "nickname") {
