@@ -13,36 +13,94 @@ import Profile from "./Profile";
 import CoinContent from "routes/CoinContent";
 import StockContent from "routes/StockContent";
 import Footer from "./Footer";
+import { useDispatch, useSelector } from "react-redux";
+import { CLEAR_ERROR_REQUEST, LOGIN_REQUEST } from "redux/types";
 
 const AppRouter = ({ isLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [error, setError] = useState("");
+  const [localMsg, setLocalMsg] = useState("");
+  const [myNickname, setMyNickname] = useState("");
 
-  const onChange = (event) => {
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const dispatch = useDispatch();
+  const { errorMsg } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    try {
+      setLocalMsg(errorMsg);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [errorMsg]);
+
+  const handleLogin = () => {
+    dispatch({
+      type: CLEAR_ERROR_REQUEST,
+    });
+  };
+
+  const onChange2 = (event) => {
     const {
       target: { name, value },
     } = event;
-    if (name === "email") {
-      setEmail(value);
-    } else if (name === "password") {
-      setPassword(value);
-    }
+
+    setForm({
+      ...form,
+      [name]: value,
+    });
   };
 
-  const onSubmit = async (event) => {
+  const onSubmit2 = (event) => {
     event.preventDefault();
-    try {
-      await authService.signInWithEmailAndPassword(email, password);
-      // window.location.reload();
-    } catch (error) {
-      alert(error);
-    }
+    const { email, password } = form;
+    const user = {
+      email,
+      password,
+    };
+    console.log("AppRouter.js/onSubmit2", user);
+
+    dispatch({
+      type: LOGIN_REQUEST,
+      payload: user,
+    });
   };
 
   //
   //
-  const [myNickname, setMyNickname] = useState("");
+  //
+  //
+  //
+  //
+  //
+
+  // const onChange = (event) => {
+  //   const {
+  //     target: { name, value },
+  //   } = event;
+  //   if (name === "email") {
+  //     setEmail(value);
+  //   } else if (name === "password") {
+  //     setPassword(value);
+  //   }
+  // };
+
+  // const onSubmit = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     await authService.signInWithEmailAndPassword(email, password);
+  //     // window.location.reload();
+  //   } catch (error) {
+  //     alert(error);
+  //   }
+  // };
+
+  //
+  //
 
   // const myProfile = () => {
   //   if (isLoggedIn) {
@@ -56,25 +114,25 @@ const AppRouter = ({ isLoggedIn }) => {
   //   }
   // };
 
-  const getNickname = async () => {
-    const userRef = await dbService
-      .collection("userDB")
-      .doc(`${authService.currentUser.email}`);
+  // const getNickname = async () => {
+  //   const userRef = await dbService
+  //     .collection("userDB")
+  //     .doc(`${authService.currentUser.email}`);
 
-    await userRef.get().then((doc) => {
-      setMyNickname(doc.data().nickname);
-    });
-  };
+  //   await userRef.get().then((doc) => {
+  //     setMyNickname(doc.data().nickname);
+  //   });
+  // };
 
-  if (isLoggedIn) {
-    // const userRef = dbService
-    //   .collection("userDB")
-    //   .doc(`${authService.currentUser.email}`);
-    // userRef.get().then((doc) => {
-    //   setMyNickname(doc.data().nickname);
-    // });
-    getNickname();
-  }
+  // if (isLoggedIn) {
+  //   // const userRef = dbService
+  //   //   .collection("userDB")
+  //   //   .doc(`${authService.currentUser.email}`);
+  //   // userRef.get().then((doc) => {
+  //   //   setMyNickname(doc.data().nickname);
+  //   // });
+  //   getNickname();
+  // }
 
   // useEffect(() => {
   //   myProfile();
@@ -94,7 +152,24 @@ const AppRouter = ({ isLoggedIn }) => {
             </div>
           ) : (
             <div>
-              <form onSubmit={onSubmit}>
+              <form onSubmit={onSubmit2}>
+                <input
+                  onChange={onChange2}
+                  // value={form.email}
+                  name="email"
+                  type="email"
+                  placeholder="이메일"
+                ></input>
+                <input
+                  onChange={onChange2}
+                  // value={form.password}
+                  name="password"
+                  type="password"
+                  placeholder="패스워드"
+                ></input>
+                <input type="submit" value="로그인"></input>
+              </form>
+              {/* <form onSubmit={onSubmit}>
                 <input
                   onChange={onChange}
                   value={email}
@@ -110,7 +185,7 @@ const AppRouter = ({ isLoggedIn }) => {
                   placeholder="패스워드"
                 ></input>
                 <input type="submit" value="로그인"></input>
-              </form>
+              </form> */}
               <Button as={Link} to="/SignUp">
                 가입하기
               </Button>

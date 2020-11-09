@@ -138,7 +138,7 @@ style-loader 2.0.0 버전을 지우고, npm i style-loader@1.2.1
 
 1. https://dev.to/suraj975/ckeditor-image-upload-with-firebase-and-react-1pe8
 
-    파이어베이스와 CKEditor를 어떻게 연결시킬것인가에 대한 도움
+   파이어베이스와 CKEditor를 어떻게 연결시킬것인가에 대한 도움
 
 2. 일단은 파이버에이스와 CKEditor를 연결하여서, 이미지가 파이어베이스 스토리지로 업로드된것 확인하였음
 
@@ -245,3 +245,13 @@ redux를 사용해서 라우터를 관리해주는 connected-react-router
 npm i history@4.7.2
 
 src 폴더에 redux 폴더 - reducers, sagas 폴더 만듬
+
+---
+
+# 32. 리덕스, 리덕스 사가 도입 1단계
+
+일단 로그인과 회원가입 부분을 리덕스 사가로 처리하였다
+
+이전에 해두었던 닉네임 관련된 로직들이 작동되지 않으므로 고쳐야하는데,
+
+리덕스로 하면 될듯하다

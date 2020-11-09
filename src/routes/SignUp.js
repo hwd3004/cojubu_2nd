@@ -1,6 +1,9 @@
 import { authService, dbService } from "fbase";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import moment from "moment";
+import { useDispatch } from "react-redux";
+import { SIGN_UP_REQUEST } from "redux/types";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -8,12 +11,15 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const history = useHistory();
+  const [signUpSwitch, setSignUpSwitch] = useState(false);
+
+  const dispatch = useDispatch();
 
   const onChange = (event) => {
     const {
       target: { name, value },
     } = event;
-    
+
     if (name === "email") {
       setEmail(value);
     } else if (name === "nickname") {
@@ -23,27 +29,54 @@ const SignUp = () => {
     }
   };
 
-  const onSubmit = async (event) => {
+  const onSubmit = (event) => {
     event.preventDefault();
-    try {
-      // await authService
-      // .createUserWithEmailAndPassword(email, password)
-      // .then(history.push("/"));
 
-      await authService.createUserWithEmailAndPassword(email, password);
+    if (signUpSwitch === false) {
+      setSignUpSwitch(true);
 
-      // 주의 - uid도 db에 저장하기 위해서, 이 코드는 여기에 위치해야함
-      await dbService
-        .collection("userDB")
-        .doc(email)
-        .set({ uid: authService.currentUser.uid, email, password, nickname });
+      const signUpUser = {
+        email,
+        nickname,
+        password,
+      };
 
-      history.push("/");
-      // window.location.replace("/");
-    } catch (error) {
-      setError(error);
+      dispatch({
+        type: SIGN_UP_REQUEST,
+        payload: signUpUser,
+      });
     }
+
+    history.push("/");
   };
+
+  // const onSubmit = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     // await authService
+  //     // .createUserWithEmailAndPassword(email, password)
+  //     // .then(history.push("/"));
+
+  //     const signUpDay = moment().format("YYYY-MM-DD HH:mm:ss");
+
+  //     await authService.createUserWithEmailAndPassword(email, password);
+
+  //     // 주의 - uid도 db에 저장하기 위해서, 이 코드는 여기에 위치해야함
+  //     await dbService.collection("userDB").doc(email).set({
+  //       uid: authService.currentUser.uid,
+  //       email,
+  //       password,
+  //       nickname,
+  //       signUpDay,
+  //       permission: "user",
+  //     });
+
+  //     history.push("/");
+  //     // window.location.replace("/");
+  //   } catch (error) {
+  //     setError(error);
+  //   }
+  // };
 
   return (
     <div className="SignUp">
