@@ -255,3 +255,13 @@ src 폴더에 redux 폴더 - reducers, sagas 폴더 만듬
 이전에 해두었던 닉네임 관련된 로직들이 작동되지 않으므로 고쳐야하는데,
 
 리덕스로 하면 될듯하다
+
+---
+
+# 33. 리덕스, 리덕스 사가 도입 2단계
+
+로그인, 로그아웃, 닉네임 출력, 글 쓸때 닉네임 값 넘어가기 등등 성공한듯 하다
+
+로그아웃 시 워닝이 뜬다
+
+index.js:1 Warning: Cannot update during an existing state transition (such as within `render`). Render methods should be a pure function of props and state.

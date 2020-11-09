@@ -1,12 +1,15 @@
 import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { Link, useRouteMatch } from "react-router-dom";
 
-const Stock = ({ isLoggedIn }) => {
+const Stock = () => {
   const match = useRouteMatch();
 
   const [list, setList] = useState([]);
+
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
   let DB_NAME, DIV_CLASS_NAME, CATEGORY, LINK_WRITE, LINK_TO;
 

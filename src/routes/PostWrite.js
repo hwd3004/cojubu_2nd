@@ -16,10 +16,12 @@ import MyUploadAdapter from "components/editor/UploadAdapter.js";
 import { authService, dbService } from "fbase";
 import moment from "moment";
 import shortid from "shortid";
+import { useSelector } from "react-redux";
 
-const PostWrite = ({ isLoggedIn, myNickname }) => {
+const PostWrite = () => {
   const history = useHistory();
   const match = useRouteMatch();
+  const { isLoggedIn, nickname } = useSelector((state) => state.auth);
 
   const [something, setSomething] = useState({});
 
@@ -79,7 +81,7 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
       category: CATEGORY,
       createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
       creatorUid: authService.currentUser.uid,
-      creatorNickname: `${myNickname}`,
+      creatorNickname: nickname,
       upVote: 0,
       downVOte: 0,
       comment: [],
@@ -155,18 +157,6 @@ const PostWrite = ({ isLoggedIn, myNickname }) => {
           <CKEditor
             editor={ClassicEditor}
             config={editorConfiguration}
-            //
-            // onInit={MyInit}
-            //
-            // onInit={(editor) => {
-            //   editor.plugins.get("FileRepository").createUploadAdapter = (
-            //     loader
-            //   ) => {
-            //     // Configure the URL to the upload script in your back-end here!
-            //     return new MyUploadAdapter(loader, db_name);
-            //   };
-            // }}
-            //
             onBlur={getDataFromCKEditor}
             onInit={postInit}
           />

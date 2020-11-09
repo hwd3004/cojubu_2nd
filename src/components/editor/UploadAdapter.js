@@ -10,7 +10,7 @@ class MyUploadAdapter {
 
   // Starts the upload process.
   upload() {
-    console.log(this.db_name)
+    // console.log(this.db_name)
     return this.loader.file.then(
       (file) =>
         new Promise((resolve, reject) => {

@@ -4,11 +4,58 @@ import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
+  LOGOUT_FAILURE,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
   SIGN_UP_FAILURE,
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
+  USER_LOADING_FAILURE,
+  USER_LOADING_REQUEST,
+  USER_LOADING_SUCCESS,
 } from "../types";
 import moment from "moment";
+
+//
+//
+// 로그인된 유저 정보 불러오기
+
+const userLoadingAPI = async (loadingData) => {
+  try {
+    const { uid } = loadingData;
+
+    const userRef = await dbService
+      .collection("userDB")
+      .doc(uid)
+      .get()
+      .then((doc) => doc.data());
+
+    return userRef;
+  } catch (error) {
+    console.log(error);
+    alert(error);
+  }
+};
+
+function* userLoading(action) {
+  try {
+    const result = yield call(userLoadingAPI, action.payload);
+
+    yield put({
+      type: USER_LOADING_SUCCESS,
+      payload: result,
+    });
+  } catch (error) {
+    yield put({
+      type: USER_LOADING_FAILURE,
+      payload: error.response,
+    });
+  }
+}
+
+function* watchUserLoading() {
+  yield takeEvery(USER_LOADING_REQUEST, userLoading);
+}
 
 //
 //
@@ -16,8 +63,6 @@ import moment from "moment";
 
 const signUpUserAPI = async (signUpData) => {
   try {
-    console.log("authSaga.js/signUpData", signUpData);
-
     const { email, password, nickname } = signUpData;
 
     const signUpDay = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -28,6 +73,8 @@ const signUpUserAPI = async (signUpData) => {
 
     const permission = "user";
 
+    const emailVerified = false;
+
     await dbService.collection("userDB").doc(uid).set({
       uid,
       email,
@@ -35,9 +82,18 @@ const signUpUserAPI = async (signUpData) => {
       nickname,
       signUpDay,
       permission,
+      emailVerified,
     });
 
-    return { email, password, nickname, signUpDay, uid, permission };
+    return {
+      email,
+      password,
+      nickname,
+      signUpDay,
+      uid,
+      permission,
+      emailVerified,
+    };
   } catch (error) {
     console.log(error);
     alert(error);
@@ -47,8 +103,6 @@ const signUpUserAPI = async (signUpData) => {
 function* signUpUser(action) {
   try {
     const result = yield call(signUpUserAPI, action.payload);
-
-    console.log("authSaga.js/signUpUser", result);
 
     yield put({
       type: SIGN_UP_SUCCESS,
@@ -74,31 +128,31 @@ function* watchSignUpUser() {
 
 const loginUserAPI = async (loginData) => {
   try {
-    console.log("authSaga.js/loginData", loginData);
-
     const { email, password } = loginData;
 
     await authService.signInWithEmailAndPassword(email, password);
 
-    authService.onAuthStateChanged(async (user) => {
-      if (user) {
-        const uid = await authService.currentUser.uid;
+    const uid = await authService.currentUser.uid;
 
-        const userRef = await dbService
-          .collection("userDB")
-          .doc(`${authService.currentUser.email}`)
-          .get()
-          .then((doc) => {
-            return doc.data();
-          });
+    const userRef = await dbService
+      .collection("userDB")
+      .doc(uid)
+      .get()
+      .then((doc) => {
+        return doc.data();
+      });
 
-        const { nickname, permission, signUpDay } = userRef;
+    const { nickname, permission, signUpDay, emailVerified } = userRef;
 
-        console.log("닉네임", nickname);
-
-        return { email, password, uid, nickname, permission, signUpDay };
-      }
-    });
+    return {
+      email,
+      password,
+      uid,
+      nickname,
+      permission,
+      signUpDay,
+      emailVerified,
+    };
   } catch (error) {
     if (error.code === "auth/user-not-found") {
       alert("등록되지않은 이메일입니다");
@@ -110,8 +164,6 @@ const loginUserAPI = async (loginData) => {
 function* loginUser(action) {
   try {
     const result = yield call(loginUserAPI, action.payload);
-
-    console.log("authSaga.js/loginUser", result);
 
     yield put({
       type: LOGIN_SUCCESS,
@@ -131,8 +183,36 @@ function* watchLoginUser() {
 
 //
 //
+// 로그아웃
+
+function* logout() {
+  try {
+    authService.signOut();
+
+    yield put({
+      type: LOGOUT_SUCCESS,
+    });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: LOGOUT_FAILURE,
+    });
+  }
+}
+
+function* watchLogout() {
+  yield takeEvery(LOGOUT_REQUEST, logout);
+}
+
+//
+//
 //
 
 export default function* authSaga() {
-  yield all([fork(watchLoginUser), fork(watchSignUpUser)]);
+  yield all([
+    fork(watchLoginUser),
+    fork(watchSignUpUser),
+    fork(watchUserLoading),
+    fork(watchLogout),
+  ]);
 }

@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { authService, dbService } from "fbase";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link, Redirect, Route, Switch } from "react-router-dom";
 import Coin from "routes/Coin";
@@ -14,37 +12,19 @@ import CoinContent from "routes/CoinContent";
 import StockContent from "routes/StockContent";
 import Footer from "./Footer";
 import { useDispatch, useSelector } from "react-redux";
-import { CLEAR_ERROR_REQUEST, LOGIN_REQUEST } from "redux/types";
+import { LOGIN_REQUEST } from "redux/types";
 
-const AppRouter = ({ isLoggedIn }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [localMsg, setLocalMsg] = useState("");
-  const [myNickname, setMyNickname] = useState("");
-
+const AppRouter = () => {
   const [form, setForm] = useState({
-    email: "",
-    password: "",
+    email: null,
+    password: null,
   });
 
+  const { isLoggedIn } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
-  const { errorMsg } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    try {
-      setLocalMsg(errorMsg);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [errorMsg]);
-
-  const handleLogin = () => {
-    dispatch({
-      type: CLEAR_ERROR_REQUEST,
-    });
-  };
-
-  const onChange2 = (event) => {
+  const onChange = (event) => {
     const {
       target: { name, value },
     } = event;
@@ -55,89 +35,19 @@ const AppRouter = ({ isLoggedIn }) => {
     });
   };
 
-  const onSubmit2 = (event) => {
+  const onSubmit = (event) => {
     event.preventDefault();
     const { email, password } = form;
     const user = {
       email,
       password,
     };
-    console.log("AppRouter.js/onSubmit2", user);
 
     dispatch({
       type: LOGIN_REQUEST,
       payload: user,
     });
   };
-
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-
-  // const onChange = (event) => {
-  //   const {
-  //     target: { name, value },
-  //   } = event;
-  //   if (name === "email") {
-  //     setEmail(value);
-  //   } else if (name === "password") {
-  //     setPassword(value);
-  //   }
-  // };
-
-  // const onSubmit = async (event) => {
-  //   event.preventDefault();
-  //   try {
-  //     await authService.signInWithEmailAndPassword(email, password);
-  //     // window.location.reload();
-  //   } catch (error) {
-  //     alert(error);
-  //   }
-  // };
-
-  //
-  //
-
-  // const myProfile = () => {
-  //   if (isLoggedIn) {
-  //     const userRef = dbService
-  //       .collection("userDB")
-  //       .doc(`${authService.currentUser.email}`);
-
-  //     userRef.get().then((doc) => {
-  //       setMyNickname(doc.data().nickname);
-  //     });
-  //   }
-  // };
-
-  // const getNickname = async () => {
-  //   const userRef = await dbService
-  //     .collection("userDB")
-  //     .doc(`${authService.currentUser.email}`);
-
-  //   await userRef.get().then((doc) => {
-  //     setMyNickname(doc.data().nickname);
-  //   });
-  // };
-
-  // if (isLoggedIn) {
-  //   // const userRef = dbService
-  //   //   .collection("userDB")
-  //   //   .doc(`${authService.currentUser.email}`);
-  //   // userRef.get().then((doc) => {
-  //   //   setMyNickname(doc.data().nickname);
-  //   // });
-  //   getNickname();
-  // }
-
-  // useEffect(() => {
-  //   myProfile();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   return (
     <div className="AppRouter">
@@ -148,44 +58,28 @@ const AppRouter = ({ isLoggedIn }) => {
           </Button>
           {isLoggedIn ? (
             <div>
-              <Profile myNickname={myNickname} />
+              <Profile />
             </div>
           ) : (
             <div>
-              <form onSubmit={onSubmit2}>
+              <form onSubmit={onSubmit}>
                 <input
-                  onChange={onChange2}
-                  // value={form.email}
+                  onChange={onChange}
                   name="email"
                   type="email"
                   placeholder="이메일"
+                  minLength="6"
                 ></input>
                 <input
-                  onChange={onChange2}
-                  // value={form.password}
+                  onChange={onChange}
                   name="password"
                   type="password"
                   placeholder="패스워드"
+                  minLength="6"
                 ></input>
                 <input type="submit" value="로그인"></input>
               </form>
-              {/* <form onSubmit={onSubmit}>
-                <input
-                  onChange={onChange}
-                  value={email}
-                  name="email"
-                  type="email"
-                  placeholder="이메일"
-                ></input>
-                <input
-                  onChange={onChange}
-                  value={password}
-                  name="password"
-                  type="password"
-                  placeholder="패스워드"
-                ></input>
-                <input type="submit" value="로그인"></input>
-              </form> */}
+
               <Button as={Link} to="/SignUp">
                 가입하기
               </Button>
@@ -217,23 +111,23 @@ const AppRouter = ({ isLoggedIn }) => {
           </Route>
 
           <Route exact path="/Coin">
-            <Coin isLoggedIn={isLoggedIn} />
+            <Coin />
           </Route>
           <Route exact path="/CoinPostWrite">
-            <PostWrite isLoggedIn={isLoggedIn} myNickname={myNickname} />
+            <PostWrite />
           </Route>
           <Route exact path="/Coin/:id">
-            <CoinContent isLoggedIn={isLoggedIn} myNickname={myNickname} />
+            <CoinContent />
           </Route>
 
           <Route exact path="/Stock">
-            <Stock isLoggedIn={isLoggedIn} />
+            <Stock />
           </Route>
           <Route exact path="/StockPostWrite">
-            <PostWrite isLoggedIn={isLoggedIn} myNickname={myNickname} />
+            <PostWrite />
           </Route>
           <Route exact path="/Stock/:id">
-            <StockContent isLoggedIn={isLoggedIn} myNickname={myNickname} />
+            <StockContent />
           </Route>
 
           <Redirect from="*" to="/" />

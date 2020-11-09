@@ -1,7 +1,5 @@
-import { authService, dbService } from "fbase";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import moment from "moment";
 import { useDispatch } from "react-redux";
 import { SIGN_UP_REQUEST } from "redux/types";
 
@@ -9,7 +7,6 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const history = useHistory();
   const [signUpSwitch, setSignUpSwitch] = useState(false);
 
@@ -111,7 +108,6 @@ const SignUp = () => {
           ></input>
           <input type="submit" value="가입하기"></input>
         </form>
-        {error}
       </div>
     </div>
   );
