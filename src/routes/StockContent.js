@@ -1,6 +1,9 @@
 import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouteMatch } from "react-router-dom";
+import BalloonEditor from "@ckeditor/ckeditor5-editor-balloon/src/ballooneditor";
+import { editorConfiguration } from "components/editor/EditorConfig";
+import CKEditor from "@ckeditor/ckeditor5-react";
 
 const StockContent = () => {
   const { id } = useParams();
@@ -39,12 +42,19 @@ const StockContent = () => {
   const { contents, title, createdAt, creatorNickname } = document;
 
   return (
-    <div className={`${DIV_CLASS_NAME}`}>
-      <p>{title}</p>
-      <p>{createdAt}</p>
-      <p>{creatorNickname}</p>
-      <div dangerouslySetInnerHTML={{ __html: contents }}></div>
-    </div>
+    <>
+      <div className={`${DIV_CLASS_NAME}`}>
+        <p>{title}</p>
+        <p>{createdAt}</p>
+        <p>{creatorNickname}</p>
+        <CKEditor
+          editor={BalloonEditor}
+          data={contents}
+          config={editorConfiguration}
+          disabled="true"
+        />
+      </div>
+    </>
   );
 };
 

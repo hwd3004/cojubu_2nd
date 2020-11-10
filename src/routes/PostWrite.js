@@ -72,7 +72,8 @@ const PostWrite = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
-    const GET_URL = shortid.generate();
+    // const GET_URL = shortid.generate();
+    const GET_URL = moment().format("YYMMDD") + shortid.generate();
 
     const newPost = {
       title: form.title,

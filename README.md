@@ -265,3 +265,9 @@ src 폴더에 redux 폴더 - reducers, sagas 폴더 만듬
 로그아웃 시 워닝이 뜬다
 
 index.js:1 Warning: Cannot update during an existing state transition (such as within `render`). Render methods should be a pure function of props and state.
+
+---
+
+# 34. 게시글 디테일 페이지의 컨텐츠 표시 방법을 dangerous로 강제하는 것에서 CKEditor로 바꿈
+
+페이지네이션 준비

@@ -1,7 +1,9 @@
 import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouteMatch } from "react-router-dom";
-// import Coin from "./Coin";
+import BalloonEditor from "@ckeditor/ckeditor5-editor-balloon/src/ballooneditor";
+import { editorConfiguration } from "components/editor/EditorConfig";
+import CKEditor from "@ckeditor/ckeditor5-react";
 
 const CoinContent = () => {
   const { id } = useParams();
@@ -45,9 +47,13 @@ const CoinContent = () => {
         <p>{title}</p>
         <p>{createdAt}</p>
         <p>{creatorNickname}</p>
-        <div dangerouslySetInnerHTML={{ __html: contents }}></div>
+        <CKEditor
+          editor={BalloonEditor}
+          data={contents}
+          config={editorConfiguration}
+          disabled="true"
+        />
       </div>
-      {/* <Coin /> */}
     </>
   );
 };
