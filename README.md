@@ -271,3 +271,17 @@ index.js:1 Warning: Cannot update during an existing state transition (such as w
 # 34. 게시글 디테일 페이지의 컨텐츠 표시 방법을 dangerous로 강제하는 것에서 CKEditor로 바꿈
 
 페이지네이션 준비
+
+---
+
+# 35. npm i firestore-pagination-hook
+
+https://www.npmjs.com/package/firestore-pagination-hook
+
+막상 써보니 원하던 결과와 다르다.
+
+구글 검색 - logo generator
+
+https://ko.wix.com/logo/maker
+
+글 삭제 구현했으나, 글을 쓸때 첨부한 이미지 파일들의 삭제는 나중에 구현 예정

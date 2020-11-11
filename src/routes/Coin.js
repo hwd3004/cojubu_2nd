@@ -1,6 +1,6 @@
 import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
-import { Button, Table } from "react-bootstrap";
+import { Button, NavbarBrand, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link, useRouteMatch } from "react-router-dom";
 
@@ -53,8 +53,7 @@ const Coin = () => {
 
   return (
     <div className={`${DIV_CLASS_NAME}`}>
-      <div>{CATEGORY}</div>
-      <div>글목록</div>
+      <NavbarBrand>{CATEGORY} 게시판</NavbarBrand>
 
       <Table>
         <thead>

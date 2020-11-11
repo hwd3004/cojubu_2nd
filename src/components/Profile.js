@@ -1,10 +1,10 @@
 // import { authService } from "fbase";
 import React from "react";
-import { Button } from "react-bootstrap";
+import { Button, Nav, Navbar } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGOUT_REQUEST } from "redux/types";
 
-const Profile = ({ myNickname }) => {
+const Profile = () => {
   const dispatch = useDispatch();
 
   const onLogOut = () => {
@@ -17,11 +17,12 @@ const Profile = ({ myNickname }) => {
   const { nickname } = useSelector((state) => state.auth);
 
   return (
-    <div className="Profile">
-      <div>Profile</div>
-      <div>{nickname}</div>
-      <Button onClick={onLogOut}>로그아웃</Button>
-    </div>
+    <Nav className="ml-auto">
+      <Navbar.Brand>sup. {nickname}</Navbar.Brand>
+      <Button onClick={onLogOut} variant="outline-primary">
+        로그아웃
+      </Button>
+    </Nav>
   );
 };
 

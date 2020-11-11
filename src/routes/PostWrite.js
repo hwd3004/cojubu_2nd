@@ -56,14 +56,14 @@ const PostWrite = () => {
 
   const { DB_NAME, DIV_CLASS_NAME, CATEGORY, LINK_TO } = something;
 
-  const [form, setValues] = useState({
+  const [form, setForm] = useState({
     title: "",
     contents: "",
     fileUrl: "",
   });
 
   const onChange = (e) => {
-    setValues({
+    setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
@@ -75,10 +75,12 @@ const PostWrite = () => {
     // const GET_URL = shortid.generate();
     const GET_URL = moment().format("YYMMDD") + shortid.generate();
 
+    const { title, contents, fileUrl } = form;
+
     const newPost = {
-      title: form.title,
-      contents: form.contents,
-      fileUrl: form.fileUrl,
+      title,
+      contents,
+      fileUrl,
       category: CATEGORY,
       createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
       creatorUid: authService.currentUser.uid,
@@ -117,13 +119,13 @@ const PostWrite = () => {
         result_Img_Url = data.substring(whereImg_start + 10, whereImg_end + 3);
       }
 
-      setValues({
+      setForm({
         ...form,
         fileUrl: result_Img_Url,
         contents: data,
       });
     } else {
-      setValues({
+      setForm({
         ...form,
         fileUrl:
           "https://images.unsplash.com/photo-1507123948929-86a949bdaa23?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80",
