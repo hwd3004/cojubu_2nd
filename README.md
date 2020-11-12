@@ -285,3 +285,7 @@ https://www.npmjs.com/package/firestore-pagination-hook
 https://ko.wix.com/logo/maker
 
 글 삭제 구현했으나, 글을 쓸때 첨부한 이미지 파일들의 삭제는 나중에 구현 예정
+
+---
+
+# 36. DB 구조 변경

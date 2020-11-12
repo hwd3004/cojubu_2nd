@@ -1,14 +1,13 @@
 import React from "react";
 import { Button } from "react-bootstrap";
+// eslint-disable-next-line no-unused-vars
 import { Link, Redirect, Route, Switch } from "react-router-dom";
-import Coin from "routes/Coin";
+import Board from "routes/Board";
 import PostWrite from "routes/PostWrite";
 import Home from "routes/Home";
 import SignUp from "routes/SignUp";
 import Skyrocket from "routes/Skyrocket";
-import Stock from "routes/Stock";
-import CoinContent from "routes/CoinContent";
-import StockContent from "routes/StockContent";
+import PostContent from "routes/PostContent";
 import Footer from "./Footer";
 import Header from "./Header";
 import "scss/AppRouter.scss";
@@ -44,26 +43,25 @@ const AppRouter = () => {
             </Route>
 
             <Route exact path="/Coin">
-              <Coin />
+              <Board />
             </Route>
+            <Route exact path="/Stock">
+              <Board />
+            </Route>
+
             <Route exact path="/CoinPostWrite">
               <PostWrite />
             </Route>
-            <Route exact path="/Coin/:id">
-              <CoinContent />
-            </Route>
 
-            <Route exact path="/Stock">
-              <Stock />
-            </Route>
             <Route exact path="/StockPostWrite">
               <PostWrite />
             </Route>
-            <Route exact path="/Stock/:id">
-              <StockContent />
+
+            <Route exact path="/:id">
+              <PostContent />
             </Route>
 
-            <Redirect from="*" to="/" />
+            {/* <Redirect from="*" to="/" /> */}
           </Switch>
         </div>
 

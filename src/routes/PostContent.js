@@ -1,4 +1,3 @@
-
 import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import {
@@ -13,7 +12,7 @@ import CKEditor from "@ckeditor/ckeditor5-react";
 import { Button, Modal, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
-const CoinContent = () => {
+const PostContent = () => {
   const { id } = useParams();
   const match = useRouteMatch();
   const { path } = match;
@@ -33,20 +32,18 @@ const CoinContent = () => {
   // console.log("match", match);
   // console.log("loc", loc);
 
-  let DB_NAME, DIV_CLASS_NAME, PARENT_URL;
+  let DIV_CLASS_NAME, PARENT_URL;
 
   if (path === "/Coin/:id") {
-    DB_NAME = "CoinPostDB";
     DIV_CLASS_NAME = "CoinContent";
     PARENT_URL = "/Coin";
   } else if (path === "/Stock/:id") {
-    DB_NAME = "StockPostDB";
     DIV_CLASS_NAME = "StockContent";
     PARENT_URL = "/Stock";
   }
 
   const getContent = async () => {
-    const contentRef = await dbService.collection(`${DB_NAME}`).doc(`${id}`);
+    const contentRef = await dbService.collection("PostDB").doc(`${id}`);
 
     await contentRef.get().then((doc) => {
       //   console.log(doc.data())
@@ -62,7 +59,7 @@ const CoinContent = () => {
   const { contents, title, createdAt, creatorNickname, creatorUid } = document;
 
   const executeDeletePost = async () => {
-    await dbService.collection(`${DB_NAME}`).doc(`${id}`).delete();
+    await dbService.collection("PostDB").doc(`${id}`).delete();
     history.push(`${PARENT_URL}`);
   };
 
@@ -105,7 +102,9 @@ const CoinContent = () => {
         {creatorUid === uid ? (
           <tfoot>
             <tr>
-              <td><Button>수정</Button></td>
+              <td>
+                <Button>수정</Button>
+              </td>
               <td>
                 <Button onClick={handleShow}>삭제</Button>
               </td>
@@ -117,4 +116,4 @@ const CoinContent = () => {
   );
 };
 
-export default CoinContent;
+export default PostContent;

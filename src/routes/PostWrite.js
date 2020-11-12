@@ -6,6 +6,7 @@ import {
   FormControl,
   FormGroup,
   FormLabel,
+  NavbarBrand,
 } from "react-bootstrap";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import CKEditor from "@ckeditor/ckeditor5-react";
@@ -25,17 +26,17 @@ const PostWrite = () => {
 
   const [something, setSomething] = useState({});
 
+  const { path } = match;
+
   let db_name;
 
-  if (match.path === "/CoinPostWrite") {
+  if (path === "/CoinPostWrite") {
     db_name = "CoinPostDB";
-  } else if (match.path === "/StockPostWrite") {
+  } else if (path === "/StockPostWrite") {
     db_name = "StockPostDB";
   }
 
   useEffect(() => {
-    const { path } = match;
-
     if (path === "/CoinPostWrite") {
       setSomething({
         DB_NAME: "CoinPostDB",
@@ -51,10 +52,9 @@ const PostWrite = () => {
         LINK_TO: "Stock",
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [path]);
 
-  const { DB_NAME, DIV_CLASS_NAME, CATEGORY, LINK_TO } = something;
+  const { DIV_CLASS_NAME, CATEGORY, LINK_TO } = something;
 
   const [form, setForm] = useState({
     title: "",
@@ -72,12 +72,14 @@ const PostWrite = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
-    // const GET_URL = shortid.generate();
     const GET_URL = moment().format("YYMMDD") + shortid.generate();
+
+    const url = `${LINK_TO}${GET_URL}`;
 
     const { title, contents, fileUrl } = form;
 
     const newPost = {
+      url,
       title,
       contents,
       fileUrl,
@@ -88,13 +90,13 @@ const PostWrite = () => {
       upVote: 0,
       downVOte: 0,
       comment: [],
+      unreadComment: false,
       views: 0,
     };
 
-    // await dbService.collection(`${DB_NAME}`).add(newPost);
-    await dbService.collection(`${DB_NAME}`).doc(GET_URL).set(newPost);
+    await dbService.collection("PostDB").doc(url).set(newPost);
 
-    history.push(`/${LINK_TO}/${GET_URL}`);
+    history.push(url);
   };
 
   const getDataFromCKEditor = (event, editor) => {
@@ -143,7 +145,8 @@ const PostWrite = () => {
 
   return (
     <div className={`${DIV_CLASS_NAME}`}>
-      글쓰기 폼<div>{isLoggedIn ? null : history.push("/")}</div>
+      <div>{isLoggedIn ? null : history.push("/")}</div>
+      <NavbarBrand>{CATEGORY} 게시판 글쓰기</NavbarBrand>
       <Form onSubmit={onSubmit}>
         <FormGroup>
           <FormLabel>Title</FormLabel>
