@@ -95,8 +95,10 @@ const signUpUserAPI = async (signUpData) => {
       emailVerified,
     };
   } catch (error) {
+    if (error.code === "auth/email-already-in-use") {
+      alert("이미 사용하고 있는 이메일입니다.");
+    }
     console.log(error);
-    alert(error);
   }
 };
 
@@ -114,7 +116,6 @@ function* signUpUser(action) {
       payload: error.response,
     });
     console.log(error);
-    alert(error);
   }
 }
 
@@ -155,7 +156,9 @@ const loginUserAPI = async (loginData) => {
     };
   } catch (error) {
     if (error.code === "auth/user-not-found") {
-      alert("등록되지않은 이메일입니다");
+      alert("등록되지않은 이메일입니다.");
+    } else if (error.code === "auth/wrong-password") {
+      alert("비밀번호가 일치하지 않습니다.");
     }
     console.log(error);
   }

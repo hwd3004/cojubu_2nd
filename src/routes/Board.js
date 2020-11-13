@@ -1,6 +1,6 @@
 import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
-import { Button, Table } from "react-bootstrap";
+import { Button, NavbarBrand, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 // eslint-disable-next-line no-unused-vars
 import { Link, useLocation, useParams, useRouteMatch } from "react-router-dom";
@@ -36,7 +36,7 @@ const Board = () => {
       break;
 
     default:
-      alert("Board.js exuceted switch default.");
+      alert("Board.js executed switch default.");
       break;
   }
 
@@ -55,7 +55,6 @@ const Board = () => {
         id: doc.id,
         ...doc.data(),
       };
-
       // console.log(postObj);
 
       setList((prev) => [...prev, postObj]);
@@ -70,7 +69,7 @@ const Board = () => {
 
   return (
     <div className={divClassName}>
-      <p>{category}</p>
+      <NavbarBrand>{category}</NavbarBrand>
       <Table responsive>
         <thead>
           <tr>

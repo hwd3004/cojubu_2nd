@@ -2,12 +2,12 @@ import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import { NavbarBrand, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import "scss/Skyrocket.scss";
 
 const Skyrocket = () => {
   const [list, setList] = useState([]);
 
   const getPost = async () => {
-    // 구글 검색 - https://stackoverflow.com/questions/54244722/firestore-invalid-query-am-i-using-indexing-wrong
     // https://stackoverflow.com/questions/54244722/firestore-invalid-query-am-i-using-indexing-wrong
 
     // https://firebase.google.com/docs/firestore/query-data/order-limit-data
@@ -40,10 +40,11 @@ const Skyrocket = () => {
     <div className="Skyrocket">
       <NavbarBrand>떡상 게시판</NavbarBrand>
 
-      <Table>
+      <Table id="skyrocketTable" responsive>
         <thead>
           <tr>
-            <th colSpan="4">제목</th>
+            <th>카테고리</th>
+            <th colspan="2">제목</th>
             <th>글쓴이</th>
             <th>날짜</th>
             <th>조회수</th>
@@ -76,7 +77,7 @@ const Skyrocket = () => {
                     alt=""
                   />
                 </td>
-                <td>
+                <td className="td_title">
                   <Link to={`${id}`}>
                     {title}&nbsp;
                     {comment.length !== 0 && `+${comment.length}`}

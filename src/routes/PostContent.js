@@ -83,6 +83,9 @@ const PostContent = () => {
   return (
     <div className={`${DIV_CLASS_NAME}`}>
       {modalAskDelete}
+      <Button variant="dark" onClick={() => history.goBack()}>
+        Back
+      </Button>
       <Table>
         <thead>
           <tr>
@@ -102,6 +105,12 @@ const PostContent = () => {
         {creatorUid === uid ? (
           <tfoot>
             <tr>
+              <td>
+                <Button
+                  variant="dark"
+                  onClick={() => history.goBack()}
+                >Back</Button>
+              </td>
               <td>
                 <Button>수정</Button>
               </td>

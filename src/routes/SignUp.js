@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { SIGN_UP_REQUEST } from "redux/types";
+import { dbService } from "fbase";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -26,25 +27,45 @@ const SignUp = () => {
     }
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
 
-    if (signUpSwitch === false) {
-      setSignUpSwitch(true);
+    console.log("기입한 닉네임:", nickname);
 
-      const signUpUser = {
-        email,
-        nickname,
-        password,
-      };
+    const checkExistNickname = await dbService
+      .collection("userDB")
+      .where("nickname", "==", nickname)
+      .get();
 
-      dispatch({
-        type: SIGN_UP_REQUEST,
-        payload: signUpUser,
-      });
+    let getAlreadyUseNickname;
+
+    await checkExistNickname.forEach((doc) => {
+      getAlreadyUseNickname = doc.data().nickname;
+    });
+
+    // console.log(getAlreadyUseNickname);
+
+    if (getAlreadyUseNickname) {
+      alert("이미 사용하고 있는 닉네임입니다. 다른 닉네임을 입력하여주세요.");
+      return false;
+    } else {
+      if (signUpSwitch === false) {
+        setSignUpSwitch(true);
+
+        const signUpUser = {
+          email,
+          nickname,
+          password,
+        };
+
+        dispatch({
+          type: SIGN_UP_REQUEST,
+          payload: signUpUser,
+        });
+
+        history.push("/");
+      }
     }
-
-    history.push("/");
   };
 
   // const onSubmit = async (event) => {
