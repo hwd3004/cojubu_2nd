@@ -20,19 +20,21 @@ const Board = () => {
 
   const { path } = match;
 
-  let divClassName, category, linkToWrite;
+  let divClassName, category, linkToWrite, dbName;
 
   switch (path) {
     case "/Coin":
       divClassName = "Coin";
       category = "코인";
       linkToWrite = "CoinPostWrite";
+      dbName = "CoinPostDB";
       break;
 
     case "/Stock":
       divClassName = "Stock";
       category = "주식";
       linkToWrite = "StockPostWrite";
+      dbName = "StockPostDB";
       break;
 
     default:
@@ -44,13 +46,28 @@ const Board = () => {
   // console.log(category);
 
   const getPost = async () => {
+    // const postDB = await dbService
+    //   .collection("PostDB")
+    //   .where("category", "==", category)
+    //   .orderBy("time", "desc")
+    //   .get();
+
     const postDB = await dbService
-      .collection("PostDB")
-      .where("category", "==", category)
+      .collection(`${dbName}`)
       .orderBy("time", "desc")
+      .limit(1)
       .get();
 
-    await postDB.forEach((doc) => {
+    const lastSnapshot = postDB.docs[postDB.docs.length - 1];
+
+    const startAtPostDB = await dbService
+      .collection(`${dbName}`)
+      .orderBy("time", "desc")
+      .startAt(lastSnapshot.data().time)
+      .limit(3)
+      .get();
+
+    startAtPostDB.forEach((doc) => {
       const postObj = {
         id: doc.id,
         ...doc.data(),

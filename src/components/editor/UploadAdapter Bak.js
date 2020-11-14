@@ -2,21 +2,23 @@ import * as firebase from "firebase";
 import moment from "moment";
 
 class MyUploadAdapter {
-  constructor(loader, dbName) {
+  constructor(loader, db_name, GET_URL) {
     // The file loader instance to use during the upload.
     this.loader = loader;
-    this.dbName = dbName;
+    this.db_name = db_name;
+    this.GET_URL = GET_URL;
   }
 
   // Starts the upload process.
   upload() {
+    // console.log(this.db_name)
     return this.loader.file.then(
       (file) =>
         new Promise((resolve, reject) => {
           let storage = firebase.storage().ref();
           let uploadTask = storage
             .child(
-              `${this.dbName}/${moment().format("YYMMDD")}/${moment().format(
+              `${this.db_name}/${moment().format("YYMMDD")}/${moment().format(
                 "HHmm"
               )}/${file.name}`
             )

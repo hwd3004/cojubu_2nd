@@ -1,0 +1,69 @@
+[debug] [2020-11-14T10:50:35.197Z] ----------------------------------------------------------------------
+[debug] [2020-11-14T10:50:35.200Z] Command:       D:\nodejs\node.exe D:\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2020-11-14T10:50:35.200Z] CLI Version:   8.14.1
+[debug] [2020-11-14T10:50:35.201Z] Platform:      win32
+[debug] [2020-11-14T10:50:35.201Z] Node Version:  v14.15.0
+[debug] [2020-11-14T10:50:35.204Z] Time:          Sat Nov 14 2020 19:50:35 GMT+0900 (대한민국 표준시)
+[debug] [2020-11-14T10:50:35.204Z] ----------------------------------------------------------------------
+[debug] [2020-11-14T10:50:35.204Z] 
+[debug] [2020-11-14T10:50:35.303Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-11-14T10:50:35.304Z] > authorizing via signed-in user
+[debug] [2020-11-14T10:50:35.305Z] [iam] checking project coju-bu for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2020-11-14T10:50:35.308Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-11-14T10:50:35.309Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-11-14T10:50:35.970Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","date":"Sat, 14 Nov 2020 10:50:33 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","pragma":"no-cache","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-11-14T10:50:35.989Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/coju-bu:testIamPermissions  
+ {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2020-11-14T10:50:37.057Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:34 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=581","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-11-14T10:50:37.058Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/coju-bu  
+ 
+[debug] [2020-11-14T10:50:38.096Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:35 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Deploying to 'coju-bu'...
+[info] 
+[info] i  deploying storage, firestore, hosting 
+[debug] [2020-11-14T10:50:38.143Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/coju-bu  
+ 
+[debug] [2020-11-14T10:50:38.916Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:36 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  firebase.storage: checking storage.rules for compilation errors... 
+[debug] [2020-11-14T10:50:38.925Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/coju-bu:test  
+ {"source":{"files":[{"name":"storage.rules","content":"rules_version = '2';\r\nservice firebase.storage {\r\n  match /b/{bucket}/o {\r\n    match /{allPaths=**} {\r\n      allow read, write: if true;\r\n    }\r\n  }\r\n}\r\n"}]}}
+[debug] [2020-11-14T10:50:40.465Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:38 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] +  firebase.storage: rules file storage.rules compiled successfully 
+[info] i  firestore: reading indexes from firestore.indexes.json... 
+[info] i  cloud.firestore: checking firestore.rules for compilation errors... 
+[debug] [2020-11-14T10:50:40.560Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/coju-bu:test  
+ {"source":{"files":[{"name":"firestore.rules","content":"rules_version = '2';\r\nservice cloud.firestore {\r\n  match /databases/{database}/documents {\r\n    match /{document=**} {\r\n      allow read, write: if true;\r\n    }\r\n  }\r\n}"}]}}
+[debug] [2020-11-14T10:50:42.005Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:39 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] +  cloud.firestore: rules file firestore.rules compiled successfully 
+[debug] [2020-11-14T10:50:42.009Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/coju-bu/versions  
+ {"config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2020-11-14T10:50:43.690Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:41 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-11-14T10:50:43.693Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/coju-bu/releases?pageSize=10&pageToken=  
+ 
+[debug] [2020-11-14T10:50:45.119Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:42 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-11-14T10:50:45.121Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/coju-bu/rulesets/466d5e92-243c-4b32-8b5c-11eca4730cce  
+ 
+[debug] [2020-11-14T10:50:46.508Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:44 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  storage: latest version of storage.rules already up to date, skipping upload... 
+[debug] [2020-11-14T10:50:46.512Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/coju-bu/releases?pageSize=10&pageToken=  
+ 
+[debug] [2020-11-14T10:50:46.512Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1/projects/coju-bu/databases/(default)/collectionGroups/-/indexes  
+ 
+[debug] [2020-11-14T10:50:47.262Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:44 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-11-14T10:50:47.263Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1/projects/coju-bu/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false  
+ 
+[debug] [2020-11-14T10:50:47.919Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:45 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-11-14T10:50:47.919Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/coju-bu/rulesets/2d575535-6cb7-4b6f-846f-0f394e307cc2  
+ 
+[debug] [2020-11-14T10:50:48.106Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:45 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  firestore: The following indexes are defined in your project but are not present in your firestore indexes file:
+	(PostDB) -- (upVote,ASCENDING) (time,DESCENDING) 
+	(PostDB) -- (category,ASCENDING) (createdAt,DESCENDING) 
+	(StockPostDB) -- (upVote,ASCENDING) (time,DESCENDING) 
+	(PostDB) -- (upVote,ASCENDING) (createdAt,DESCENDING) 
+	(PostDB) -- (category,ASCENDING) (time,DESCENDING) 
+	(CoinPostDB) -- (upVote,ASCENDING) (time,DESCENDING)  
+[debug] [2020-11-14T10:50:49.325Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sat, 14 Nov 2020 10:50:46 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  firestore: latest version of firestore.rules already up to date, skipping upload... 

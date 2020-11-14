@@ -15,8 +15,7 @@ import { useSelector } from "react-redux";
 const PostContent = () => {
   const { id } = useParams();
   const match = useRouteMatch();
-  // eslint-disable-next-line no-unused-vars
-  const { path, url } = match;
+  const { path } = match;
   const history = useHistory();
   // eslint-disable-next-line no-unused-vars
   const loc = useLocation();
@@ -25,34 +24,29 @@ const PostContent = () => {
 
   const { uid } = useSelector((state) => state.auth);
 
-  const [showModalToDelete, setShowModalToDelete] = useState(false);
-  const handleCloseModalToDelete = () => setShowModalToDelete(false);
-  const handleShowModalToDelete = () => setShowModalToDelete(true);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
-  let divClassName, dbName;
+  // console.log("id", id);
+  // console.log("match", match);
+  // console.log("loc", loc);
 
-  const getURL = id.split("-");
+  let DIV_CLASS_NAME, PARENT_URL;
 
-  switch (getURL[0]) {
-    case "Coin":
-      divClassName = "Coin";
-      dbName = "CoinPostDB";
-      break;
-
-    case "Stock":
-      divClassName = "Stock";
-      dbName = "StockPostDB";
-      break;
-
-    default:
-      // alert("Board.js executed switch default.");
-      break;
+  if (path === "/Coin/:id") {
+    DIV_CLASS_NAME = "CoinContent";
+    PARENT_URL = "/Coin";
+  } else if (path === "/Stock/:id") {
+    DIV_CLASS_NAME = "StockContent";
+    PARENT_URL = "/Stock";
   }
 
   const getContent = async () => {
-    const contentRef = await dbService.collection(`${dbName}`).doc(`${id}`);
+    const contentRef = await dbService.collection("PostDB").doc(`${id}`);
 
     await contentRef.get().then((doc) => {
+      //   console.log(doc.data())
       setDocument(doc.data());
     });
   };
@@ -65,18 +59,18 @@ const PostContent = () => {
   const { contents, title, createdAt, creatorNickname, creatorUid } = document;
 
   const executeDeletePost = async () => {
-    await dbService.collection(`${dbName}`).doc(`${id}`).delete();
-    history.goBack();
+    await dbService.collection("PostDB").doc(`${id}`).delete();
+    history.push(`${PARENT_URL}`);
   };
 
   const modalAskDelete = (
-    <Modal show={showModalToDelete} onHide={handleCloseModalToDelete}>
+    <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>게시글 삭제 안내</Modal.Title>
       </Modal.Header>
       <Modal.Body>정말로 삭제하시겠습니까? 복구할 수 없습니다.</Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={handleCloseModalToDelete}>
+        <Button variant="primary" onClick={handleClose}>
           취소
         </Button>
         <Button variant="danger" onClick={executeDeletePost}>
@@ -87,7 +81,7 @@ const PostContent = () => {
   );
 
   return (
-    <div className={`${divClassName}`}>
+    <div className={`${DIV_CLASS_NAME}`}>
       {modalAskDelete}
       <Button variant="dark" onClick={() => history.goBack()}>
         Back
@@ -120,7 +114,7 @@ const PostContent = () => {
                 <Button>수정</Button>
               </td>
               <td>
-                <Button onClick={handleShowModalToDelete}>삭제</Button>
+                <Button onClick={handleShow}>삭제</Button>
               </td>
             </tr>
           ) : null}

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
 import {
   Button,
   Form,
@@ -23,47 +24,37 @@ const PostWrite = () => {
   const match = useRouteMatch();
   const { isLoggedIn, nickname } = useSelector((state) => state.auth);
 
+  const [something, setSomething] = useState({});
+
   const { path } = match;
 
-  let category, dbName, urlPrefix, divClassName;
+  let db_name;
 
-  // const [divClassName, setDivClassName] = useState("");
-
-  // useEffect(() => {
-  //   switch (path) {
-  //     case "/Coin":
-  //       setDivClassName("Coin");
-  //       break;
-
-  //     case "/Stock":
-  //       setDivClassName("Stock");
-  //       break;
-
-  //     default:
-  //       alert("Board.js useEffect switch default.");
-  //       break;
-  //   }
-  // }, [path]);
-
-  switch (path) {
-    case "/CoinPostWrite":
-      urlPrefix = "Coin";
-      category = "코인";
-      dbName = "CoinPostDB";
-      divClassName = "CoinPostWrite";
-      break;
-
-    case "/StockPostWrite":
-      urlPrefix = "Stock";
-      category = "주식";
-      dbName = "StockPostDB";
-      divClassName = "StockPostWrite";
-      break;
-
-    default:
-      alert("Board.js executed switch default.");
-      break;
+  if (path === "/CoinPostWrite") {
+    db_name = "CoinPostDB";
+  } else if (path === "/StockPostWrite") {
+    db_name = "StockPostDB";
   }
+
+  useEffect(() => {
+    if (path === "/CoinPostWrite") {
+      setSomething({
+        DB_NAME: "CoinPostDB",
+        DIV_CLASS_NAME: "CoinPost",
+        CATEGORY: "코인",
+        LINK_TO: "Coin",
+      });
+    } else if (path === "/StockPostWrite") {
+      setSomething({
+        DB_NAME: "StockPostDB",
+        DIV_CLASS_NAME: "StockPost",
+        CATEGORY: "주식",
+        LINK_TO: "Stock",
+      });
+    }
+  }, [path]);
+
+  const { DIV_CLASS_NAME, CATEGORY, LINK_TO } = something;
 
   const [form, setForm] = useState({
     title: "",
@@ -81,9 +72,9 @@ const PostWrite = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
-    const urlSuffix = moment().format("YYMMDDHHmm") + shortid.generate();
+    const GET_URL = moment().format("YYMMDD") + shortid.generate();
 
-    const url = `${urlPrefix}-${urlSuffix}`;
+    const url = `${LINK_TO}${GET_URL}`;
 
     const { title, contents, fileUrl } = form;
 
@@ -92,7 +83,7 @@ const PostWrite = () => {
       title,
       contents,
       fileUrl,
-      category,
+      category: CATEGORY,
       createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
       creatorUid: authService.currentUser.uid,
       creatorNickname: nickname,
@@ -104,8 +95,7 @@ const PostWrite = () => {
       time: Date.now(),
     };
 
-    // await dbService.collection("PostDB").doc(url).set(newPost);
-    await dbService.collection(`${dbName}`).doc(url).set(newPost);
+    await dbService.collection("PostDB").doc(url).set(newPost);
 
     history.push(url);
   };
@@ -150,14 +140,14 @@ const PostWrite = () => {
   const postInit = (editor) => {
     editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
       // Configure the URL to the upload script in your back-end here!
-      return new MyUploadAdapter(loader, dbName);
+      return new MyUploadAdapter(loader, db_name);
     };
   };
 
   return (
-    <div className={`${divClassName}`}>
-      {isLoggedIn ? null : history.push("/")}
-      <NavbarBrand>{category} 게시판 글쓰기</NavbarBrand>
+    <div className={`${DIV_CLASS_NAME}`}>
+      <div>{isLoggedIn ? null : history.push("/")}</div>
+      <NavbarBrand>{CATEGORY} 게시판 글쓰기</NavbarBrand>
       <Form onSubmit={onSubmit}>
         <FormGroup>
           <FormLabel>Title</FormLabel>
