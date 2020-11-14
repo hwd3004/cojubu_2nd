@@ -47,7 +47,7 @@ const Board = () => {
     const postDB = await dbService
       .collection("PostDB")
       .where("category", "==", category)
-      .orderBy("time", "desc")
+      .orderBy("createdAt", "desc")
       .get();
 
     await postDB.forEach((doc) => {

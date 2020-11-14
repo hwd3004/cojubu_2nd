@@ -92,6 +92,7 @@ const PostWrite = () => {
       comment: [],
       unreadComment: false,
       views: 0,
+      time: Date.now(),
     };
 
     await dbService.collection("PostDB").doc(url).set(newPost);

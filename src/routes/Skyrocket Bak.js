@@ -1,6 +1,6 @@
 import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
-import { NavbarBrand, Pagination, Table } from "react-bootstrap";
+import { NavbarBrand, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "scss/Skyrocket.scss";
 
@@ -15,37 +15,26 @@ const Skyrocket = () => {
     // 인구를 오름차순으로 정렬하며, 기준을 초과하는 처음 몇 개의 결과만 반환합니다.
     // 그러나 필터에 범위 비교(<, <=, >, >=)가 포함된 경우 동일한 필드를 기준으로 1차 정렬이 이루어져야 합니다.
 
-    // const postDB = await dbService
-    //   .collection("PostDB")
-    //   .where("upVote", ">=", 0)
-    //   .orderBy("upVote")
-    //   .orderBy("time", "desc")
-    //   .limit(1);
+    const postDB = await dbService
+      .collection("PostDB")
+      .where("upVote", ">=", 0)
+      .orderBy("upVote")
+      .orderBy("createdAt", "desc")
+      .get();
 
-    // const snapshot = await postDB.get();
+    // 맥스사이즈를 구해서 원하는 숫자로 나눠서 페이지 나누기를
+    // 하려면 게시판 접속시 DB 조회를 2번 해야하는데...
+    // 비용적인 측면에서도 그렇고... 비효율적인거같다
+    await console.log(postDB.size);
 
-    // const last = snapshot.docs[snapshot.docs.length - 1];
-
-    // const startAtSnapshot = await dbService
-    //   .collection("PostDB")
-    //   .orderBy("time", "desc")
-    //   .startAfter(last.data().time)
-    //   .limit(3)
-    //   .get();
-
-    // // 맥스사이즈를 구해서 원하는 숫자로 나눠서 페이지 나누기를
-    // // 하려면 게시판 접속시 DB 조회를 2번 해야하는데...
-    // // 비용적인 측면에서도 그렇고... 비효율적인거같다
-    // // await console.log(postDB.size);
-
-    // startAtSnapshot.forEach((doc) => {
-    //   // console.log(doc.data());
-    //   const postObj = {
-    //     id: doc.id,
-    //     ...doc.data(),
-    //   };
-    //   setList((prev) => [...prev, postObj]);
-    // });
+    postDB.forEach((doc) => {
+      // console.log(doc.data());
+      const postObj = {
+        id: doc.id,
+        ...doc.data(),
+      };
+      setList((prev) => [...prev, postObj]);
+    });
   };
 
   useEffect(() => {
@@ -108,10 +97,6 @@ const Skyrocket = () => {
           })}
         </tbody>
       </Table>
-      <Pagination>
-        <Pagination.Item>1</Pagination.Item>
-        <Pagination.Item>2</Pagination.Item>
-      </Pagination>
     </div>
   );
 };

@@ -30,7 +30,7 @@ const SignUp = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
-    console.log("기입한 닉네임:", nickname);
+    // console.log("기입한 닉네임:", nickname);
 
     const checkExistNickname = await dbService
       .collection("userDB")

@@ -102,15 +102,14 @@ const PostContent = () => {
             disabled="true"
           />
         </tbody>
-        {creatorUid === uid ? (
-          <tfoot>
+        <tfoot>
+          <td>
+            <Button variant="dark" onClick={() => history.goBack()}>
+              Back
+            </Button>
+          </td>
+          {creatorUid === uid ? (
             <tr>
-              <td>
-                <Button
-                  variant="dark"
-                  onClick={() => history.goBack()}
-                >Back</Button>
-              </td>
               <td>
                 <Button>수정</Button>
               </td>
@@ -118,8 +117,8 @@ const PostContent = () => {
                 <Button onClick={handleShow}>삭제</Button>
               </td>
             </tr>
-          </tfoot>
-        ) : null}
+          ) : null}
+        </tfoot>
       </Table>
     </div>
   );
