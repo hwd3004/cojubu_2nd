@@ -9,8 +9,9 @@ import {
 import BalloonEditor from "@ckeditor/ckeditor5-editor-balloon/src/ballooneditor";
 import { editorConfiguration } from "components/editor/EditorConfig";
 import CKEditor from "@ckeditor/ckeditor5-react";
-import { Button, Modal, Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { Button, Modal } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { POST_UP_VOTE_REQUEST } from "redux/types";
 
 const PostContent = () => {
   const { id } = useParams();
@@ -28,6 +29,8 @@ const PostContent = () => {
   const [showModalToDelete, setShowModalToDelete] = useState(false);
   const handleCloseModalToDelete = () => setShowModalToDelete(false);
   const handleShowModalToDelete = () => setShowModalToDelete(true);
+
+  const dispatch = useDispatch();
 
   let divClassName, dbName;
 
@@ -48,21 +51,6 @@ const PostContent = () => {
       // alert("Board.js executed switch default.");
       break;
   }
-
-  const getContent = async () => {
-    const contentRef = await dbService.collection(`${dbName}`).doc(`${id}`);
-
-    await contentRef.get().then((doc) => {
-      setDocument(doc.data());
-    });
-  };
-
-  useEffect(() => {
-    getContent();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const { contents, title, createdAt, creatorNickname, creatorUid } = document;
 
   const executeDeletePost = async () => {
     await dbService.collection(`${dbName}`).doc(`${id}`).delete();
@@ -86,46 +74,104 @@ const PostContent = () => {
     </Modal>
   );
 
+  const getContent = async () => {
+    const contentRef = await dbService.collection(`${dbName}`).doc(`${id}`);
+
+    await contentRef.get().then((doc) => {
+      setDocument(doc.data());
+      // console.log(doc.data().upVote.length);
+    });
+
+    //
+    //
+    //
+
+    // https://firebase.google.com/docs/firestore/query-data/listen?hl=ko
+    // 클라우드 파이어 스토어 실시간 업데이트
+
+    // 구글 검색 - 파이어베이스 onsnapshot
+    // Firestore 사용시 주의점 - 토리토시스템 :: 토리토시스템 - 티스토리
+    // https://toritosystem.tistory.com/8
+
+    // const postRef = await dbService
+    //   .collection(`${dbName}`)
+    //   .doc(`${id}`)
+    //   .onSnapshot((snapshot) => {
+    //     // console.log(snapshot.data());
+
+    //     setDocument(snapshot.data());
+    //   });
+  };
+
+  useEffect(() => {
+    getContent();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const {
+    contents,
+    title,
+    createdAt,
+    creatorNickname,
+    creatorUid,
+    upVote,
+    downVote,
+  } = document;
+
+  const onClickVote = () => {
+    dispatch({
+      type: POST_UP_VOTE_REQUEST,
+      payload: {
+        ...document,
+        currentUserUid: uid,
+      },
+    });
+  };
+
   return (
     <div className={`${divClassName}`}>
       {modalAskDelete}
-      <Button variant="dark" onClick={() => history.goBack()}>
+      <Button className="mt-1" variant="dark" onClick={() => history.goBack()}>
         Back
       </Button>
-      <Table>
-        <thead>
-          <tr>
-            <td>{title}</td>
-            <td>{creatorNickname}</td>
-            <td>{createdAt}</td>
-          </tr>
-        </thead>
-        <tbody>
-          <CKEditor
-            editor={BalloonEditor}
-            data={contents}
-            config={editorConfiguration}
-            disabled="true"
-          />
-        </tbody>
-        <tfoot>
-          <td>
-            <Button variant="dark" onClick={() => history.goBack()}>
-              Back
-            </Button>
-          </td>
-          {creatorUid === uid ? (
-            <tr>
-              <td>
-                <Button>수정</Button>
-              </td>
-              <td>
-                <Button onClick={handleShowModalToDelete}>삭제</Button>
-              </td>
-            </tr>
-          ) : null}
-        </tfoot>
-      </Table>
+
+      <div className="d-flex mt-1">
+        <h1>{title}</h1>
+        <div className="ml-auto">
+          <span className="mr-5">{creatorNickname}</span>
+          <span>{createdAt}</span>
+        </div>
+      </div>
+
+      <CKEditor
+        editor={BalloonEditor}
+        data={contents}
+        config={editorConfiguration}
+        disabled="true"
+      />
+
+      <div id="voteDiv">
+        <Button onClick={onClickVote} variant="primary">
+          {upVote ? upVote.length : null} 추천
+        </Button>
+
+        <Button variant="primary">
+          {downVote ? downVote.length : null} 비추천
+        </Button>
+      </div>
+
+      <Button className="mr-1" variant="dark" onClick={() => history.goBack()}>
+        Back
+      </Button>
+
+      {creatorUid === uid ? (
+        <>
+          <Button className="mr-1">수정</Button>
+          <Button className="mr-1" onClick={handleShowModalToDelete}>
+            삭제
+          </Button>
+        </>
+      ) : null}
     </div>
   );
 };

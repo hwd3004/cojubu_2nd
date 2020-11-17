@@ -4,6 +4,7 @@ import { Button, NavbarBrand, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 // eslint-disable-next-line no-unused-vars
 import { Link, useLocation, useParams, useRouteMatch } from "react-router-dom";
+import "scss/Board.scss";
 
 const Board = () => {
   const { isLoggedIn } = useSelector((state) => state.auth);
@@ -42,40 +43,32 @@ const Board = () => {
       break;
   }
 
-  // console.log(divClassName);
-  // console.log(category);
-
   const getPost = async () => {
-    // const postDB = await dbService
-    //   .collection("PostDB")
-    //   .where("category", "==", category)
-    //   .orderBy("time", "desc")
-    //   .get();
-
     const postDB = await dbService
       .collection(`${dbName}`)
       .orderBy("time", "desc")
       .limit(1)
       .get();
 
-    const lastSnapshot = postDB.docs[postDB.docs.length - 1];
+    if (postDB.docs.length > 0) {
+      const lastSnapshot = postDB.docs[postDB.docs.length - 1];
 
-    const startAtPostDB = await dbService
-      .collection(`${dbName}`)
-      .orderBy("time", "desc")
-      .startAt(lastSnapshot.data().time)
-      .limit(3)
-      .get();
+      const startAtPostDB = await dbService
+        .collection(`${dbName}`)
+        .orderBy("time", "desc")
+        .startAt(lastSnapshot.data().time)
+        .limit(3)
+        .get();
 
-    startAtPostDB.forEach((doc) => {
-      const postObj = {
-        id: doc.id,
-        ...doc.data(),
-      };
-      // console.log(postObj);
+      startAtPostDB.forEach((doc) => {
+        const postObj = {
+          id: doc.id,
+          ...doc.data(),
+        };
 
-      setList((prev) => [...prev, postObj]);
-    });
+        setList((prev) => [...prev, postObj]);
+      });
+    }
   };
 
   useEffect(() => {
@@ -87,10 +80,11 @@ const Board = () => {
   return (
     <div className={divClassName}>
       <NavbarBrand>{category}</NavbarBrand>
-      <Table responsive>
+
+      <Table id="boardTable" responsive>
         <thead>
           <tr>
-            <th colSpan="3">제목</th>
+            <th colSpan="2">제목</th>
             <th>글쓴이</th>
             <th>날짜</th>
             <th>조회수</th>
@@ -109,7 +103,9 @@ const Board = () => {
               views,
               upVote,
             } = item;
+
             const { downloadTokens } = fileUrl;
+
             return (
               <>
                 <tr key={index}>
@@ -120,11 +116,10 @@ const Board = () => {
                       width="50px"
                     />
                   </td>
-                  <td>
-                    <Link to={`${id}`}>
-                      {title}&nbsp;
-                      {comment.length !== 0 && `+${comment.length}`}
-                    </Link>
+                  <td className="td_title">
+                    <Link to={`${id}`}>{title}&nbsp;</Link>
+                    {/* {comment.length !== 0 && `+${comment.length}`} */}+
+                    {comment.length}
                   </td>
                   <td>{creatorNickname}</td>
                   <td>{createdAt}</td>

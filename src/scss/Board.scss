@@ -1,0 +1,19 @@
+#boardTable {
+  thead {
+    tr {
+      text-align: center;
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        text-align: center;
+      }
+
+      .td_title {
+        text-align: left;
+      }
+    }
+  }
+}

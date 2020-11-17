@@ -1,12 +1,7 @@
 import React from "react";
-import Skyrocket from "./Skyrocket";
 
 const Home = () => {
-  return (
-    <>
-      <Skyrocket />
-    </>
-  );
+  return <></>;
 };
 
 export default Home;

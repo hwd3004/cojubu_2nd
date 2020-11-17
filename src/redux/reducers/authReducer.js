@@ -14,6 +14,9 @@ import {
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
   LOGOUT_FAILURE,
+  GET_POINT_WHEN_POST_REQUEST,
+  GET_POINT_WHEN_POST_SUCCESS,
+  GET_POINT_WHEN_POST_FAILURE,
 } from "redux/types";
 
 // store.js에 있는 initialState와 이름을 똑같이 해주어야함
@@ -27,6 +30,7 @@ const initialState = {
   signUpDay: null,
   permission: null,
   emailVerified: false,
+  point: 0,
   errorMsg: null,
 };
 
@@ -34,12 +38,17 @@ const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_REQUEST:
     case SIGN_UP_REQUEST:
+    case USER_LOADING_REQUEST:
+    case GET_POINT_WHEN_POST_REQUEST:
       return {
         ...state,
         isLoading: true,
       };
+
     case LOGIN_SUCCESS:
     case SIGN_UP_SUCCESS:
+    case USER_LOADING_SUCCESS:
+    case GET_POINT_WHEN_POST_SUCCESS:
       return {
         ...state,
         ...action.payload,
@@ -52,9 +61,13 @@ const authReducer = (state = initialState, action) => {
         signUpDay: action.payload.signUpDay,
         permission: action.payload.permission,
         emailVerified: action.payload.emailVerified,
+        point: action.payload.point,
       };
+
     case LOGIN_FAILURE:
     case SIGN_UP_FAILURE:
+    case USER_LOADING_FAILURE:
+    case GET_POINT_WHEN_POST_FAILURE:
       return {
         ...state,
         ...action.payload,
@@ -67,44 +80,7 @@ const authReducer = (state = initialState, action) => {
         signUpDay: null,
         permission: null,
         emailVerified: null,
-      };
-
-    //
-    //
-    //
-
-    case USER_LOADING_REQUEST:
-      return {
-        ...state,
-        isLoading: true,
-      };
-    case USER_LOADING_SUCCESS:
-      return {
-        ...state,
-        ...action.payload,
-        isLoading: false,
-        isLoggedIn: true,
-        uid: action.payload.uid,
-        nickname: action.payload.nickname,
-        email: action.payload.email,
-        password: action.payload.password,
-        signUpDay: action.payload.signUpDay,
-        permission: action.payload.permission,
-        emailVerified: action.payload.emailVerified,
-      };
-    case USER_LOADING_FAILURE:
-      return {
-        ...state,
-        ...action.payload,
-        isLoggedIn: false,
-        isLoading: false,
-        uid: null,
-        nickname: null,
-        email: null,
-        password: null,
-        signUpDay: null,
-        permission: null,
-        emailVerified: false,
+        point: 0,
       };
 
     //
@@ -142,6 +118,7 @@ const authReducer = (state = initialState, action) => {
         signUpDay: null,
         permission: null,
         emailVerified: false,
+        point: 0,
       };
 
     default:

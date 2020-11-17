@@ -7,6 +7,8 @@ import { LOGOUT_REQUEST } from "redux/types";
 const Profile = () => {
   const dispatch = useDispatch();
 
+  const { nickname, point } = useSelector((state) => state.auth);
+
   const onLogOut = () => {
     dispatch({
       type: LOGOUT_REQUEST,
@@ -14,11 +16,11 @@ const Profile = () => {
     // authService.signOut();
   };
 
-  const { nickname } = useSelector((state) => state.auth);
-
   return (
     <Nav className="ml-auto">
-      <Navbar.Brand>sup. {nickname}</Navbar.Brand>
+      <Navbar.Brand>
+        sup. {nickname} | {point} point
+      </Navbar.Brand>
       <Button onClick={onLogOut} variant="outline-primary">
         로그아웃
       </Button>

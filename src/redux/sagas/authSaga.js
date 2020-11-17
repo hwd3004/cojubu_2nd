@@ -13,8 +13,55 @@ import {
   USER_LOADING_FAILURE,
   USER_LOADING_REQUEST,
   USER_LOADING_SUCCESS,
+  GET_POINT_WHEN_POST_REQUEST,
+  GET_POINT_WHEN_POST_SUCCESS,
+  GET_POINT_WHEN_POST_FAILURE,
 } from "../types";
 import moment from "moment";
+
+//
+//
+// 글 작성시 포인트 + 5
+
+const getPointWhenPostAPI = async (userData) => {
+  try {
+    const { point, uid } = userData;
+
+    await dbService
+      .collection("userDB")
+      .doc(uid)
+      .update({
+        point: point + 5,
+      });
+
+    return { point: point + 5 };
+  } catch (error) {
+    console.error(error);
+    alert(error);
+  }
+};
+
+function* getPointWhenPost(action) {
+  try {
+    const result = yield call(getPointWhenPostAPI, action.payload);
+
+    console.log("getPointWhenPost/result", result);
+
+    yield put({
+      type: GET_POINT_WHEN_POST_SUCCESS,
+      payload: result,
+    });
+  } catch (error) {
+    yield put({
+      type: GET_POINT_WHEN_POST_FAILURE,
+      payload: error.response,
+    });
+  }
+}
+
+function* watchGetPointWhenPost() {
+  yield takeEvery(GET_POINT_WHEN_POST_REQUEST, getPointWhenPost);
+}
 
 //
 //
@@ -75,6 +122,8 @@ const signUpUserAPI = async (signUpData) => {
 
     const emailVerified = false;
 
+    const point = 0;
+
     await dbService.collection("userDB").doc(uid).set({
       uid,
       email,
@@ -83,6 +132,7 @@ const signUpUserAPI = async (signUpData) => {
       signUpDay,
       permission,
       emailVerified,
+      point,
     });
 
     return {
@@ -93,6 +143,7 @@ const signUpUserAPI = async (signUpData) => {
       uid,
       permission,
       emailVerified,
+      point,
     };
   } catch (error) {
     if (error.code === "auth/email-already-in-use") {
@@ -143,7 +194,7 @@ const loginUserAPI = async (loginData) => {
         return doc.data();
       });
 
-    const { nickname, permission, signUpDay, emailVerified } = userRef;
+    const { nickname, permission, signUpDay, emailVerified, point } = userRef;
 
     return {
       email,
@@ -153,6 +204,7 @@ const loginUserAPI = async (loginData) => {
       permission,
       signUpDay,
       emailVerified,
+      point,
     };
   } catch (error) {
     if (error.code === "auth/user-not-found") {
@@ -217,5 +269,6 @@ export default function* authSaga() {
     fork(watchSignUpUser),
     fork(watchUserLoading),
     fork(watchLogout),
+    fork(watchGetPointWhenPost),
   ]);
 }

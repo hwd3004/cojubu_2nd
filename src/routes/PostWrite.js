@@ -16,12 +16,18 @@ import MyUploadAdapter from "components/editor/UploadAdapter.js";
 import { authService, dbService } from "fbase";
 import moment from "moment";
 import shortid from "shortid";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { GET_POINT_WHEN_POST_REQUEST } from "redux/types";
 
 const PostWrite = () => {
   const history = useHistory();
   const match = useRouteMatch();
-  const { isLoggedIn, nickname } = useSelector((state) => state.auth);
+  const auth = useSelector((state) => state.auth);
+  const { isLoggedIn, nickname } = auth;
+
+  const dispatch = useDispatch();
+
+  // console.log("uid, point?", uid, point);
 
   const { path } = match;
 
@@ -96,8 +102,10 @@ const PostWrite = () => {
       createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
       creatorUid: authService.currentUser.uid,
       creatorNickname: nickname,
-      upVote: 0,
-      downVOte: 0,
+      // upVote: 0,
+      // downVote: 0,
+      upVote: [],
+      downVote: [],
       comment: [],
       unreadComment: false,
       views: 0,
@@ -106,6 +114,11 @@ const PostWrite = () => {
 
     // await dbService.collection("PostDB").doc(url).set(newPost);
     await dbService.collection(`${dbName}`).doc(url).set(newPost);
+
+    dispatch({
+      type: GET_POINT_WHEN_POST_REQUEST,
+      payload: auth,
+    });
 
     history.push(url);
   };
