@@ -102,6 +102,7 @@ const Board = () => {
               createdAt,
               views,
               upVote,
+              downVote,
             } = item;
 
             const { downloadTokens } = fileUrl;
@@ -118,13 +119,15 @@ const Board = () => {
                   </td>
                   <td className="td_title">
                     <Link to={`${id}`}>{title}&nbsp;</Link>
-                    {/* {comment.length !== 0 && `+${comment.length}`} */}+
-                    {comment.length}
+                    <span>{comment.length !== 0 && +comment.length}</span>
                   </td>
                   <td>{creatorNickname}</td>
                   <td>{createdAt}</td>
                   <td>{views}</td>
-                  <td>{upVote !== 0 && upVote}</td>
+                  <td>
+                    {upVote.length !== 0 && `+${upVote.length}`}&nbsp;
+                    {downVote.length !== 0 && `-${downVote.length}`}
+                  </td>
                 </tr>
               </>
             );

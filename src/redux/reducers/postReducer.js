@@ -2,6 +2,12 @@ import {
   POST_UP_VOTE_REQUEST,
   POST_UP_VOTE_SUCCESS,
   POST_UP_VOTE_FAILURE,
+  POST_CONTENT_REQUEST,
+  POST_CONTENT_SUCCESS,
+  POST_CONTENT_FAILURE,
+  POST_DOWN_VOTE_REQUEST,
+  POST_DOWN_VOTE_SUCCESS,
+  POST_DOWN_VOTE_FAILURE,
 } from "redux/types";
 
 const initialState = {
@@ -24,13 +30,17 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case POST_CONTENT_REQUEST:
     case POST_UP_VOTE_REQUEST:
+    case POST_DOWN_VOTE_REQUEST:
       return {
         ...state,
         isLoading: true,
       };
 
+    case POST_CONTENT_SUCCESS:
     case POST_UP_VOTE_SUCCESS:
+    case POST_DOWN_VOTE_SUCCESS:
       return {
         ...state,
         ...action.payload,
@@ -51,7 +61,9 @@ export default function (state = initialState, action) {
         currentUserUid: action.payload.currentUserUid,
       };
 
+    case POST_CONTENT_FAILURE:
     case POST_UP_VOTE_FAILURE:
+    case POST_DOWN_VOTE_FAILURE:
       return {
         ...state,
         ...action.payload,

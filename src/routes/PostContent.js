@@ -11,7 +11,11 @@ import { editorConfiguration } from "components/editor/EditorConfig";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import { Button, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { POST_UP_VOTE_REQUEST } from "redux/types";
+import {
+  POST_CONTENT_REQUEST,
+  POST_DOWN_VOTE_REQUEST,
+  POST_UP_VOTE_REQUEST,
+} from "redux/types";
 
 const PostContent = () => {
   const { id } = useParams();
@@ -22,7 +26,7 @@ const PostContent = () => {
   // eslint-disable-next-line no-unused-vars
   const loc = useLocation();
 
-  const [document, setDocument] = useState({});
+  // const [document, setDocument] = useState({});
 
   const { uid } = useSelector((state) => state.auth);
 
@@ -31,6 +35,8 @@ const PostContent = () => {
   const handleShowModalToDelete = () => setShowModalToDelete(true);
 
   const dispatch = useDispatch();
+
+  const getPostContent = useSelector((state) => state.post);
 
   let divClassName, dbName;
 
@@ -75,30 +81,28 @@ const PostContent = () => {
   );
 
   const getContent = async () => {
-    const contentRef = await dbService.collection(`${dbName}`).doc(`${id}`);
-
-    await contentRef.get().then((doc) => {
-      setDocument(doc.data());
-      // console.log(doc.data().upVote.length);
+    dispatch({
+      type: POST_CONTENT_REQUEST,
+      payload: url,
     });
 
+    // const contentRef = await dbService.collection(`${dbName}`).doc(`${id}`);
+    // await contentRef.get().then((doc) => {
+    //   setDocument(doc.data());
+    // });
     //
     //
     //
-
     // https://firebase.google.com/docs/firestore/query-data/listen?hl=ko
     // 클라우드 파이어 스토어 실시간 업데이트
-
     // 구글 검색 - 파이어베이스 onsnapshot
     // Firestore 사용시 주의점 - 토리토시스템 :: 토리토시스템 - 티스토리
     // https://toritosystem.tistory.com/8
-
     // const postRef = await dbService
     //   .collection(`${dbName}`)
     //   .doc(`${id}`)
     //   .onSnapshot((snapshot) => {
     //     // console.log(snapshot.data());
-
     //     setDocument(snapshot.data());
     //   });
   };
@@ -106,7 +110,17 @@ const PostContent = () => {
   useEffect(() => {
     getContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
+
+  // const {
+  //   contents,
+  //   title,
+  //   createdAt,
+  //   creatorNickname,
+  //   creatorUid,
+  //   upVote,
+  //   downVote,
+  // } = document;
 
   const {
     contents,
@@ -116,16 +130,43 @@ const PostContent = () => {
     creatorUid,
     upVote,
     downVote,
-  } = document;
+  } = getPostContent;
 
-  const onClickVote = () => {
-    dispatch({
-      type: POST_UP_VOTE_REQUEST,
-      payload: {
-        ...document,
-        currentUserUid: uid,
-      },
-    });
+  const onClickUpVote = () => {
+    if (uid) {
+      if (uid !== creatorUid) {
+        dispatch({
+          type: POST_UP_VOTE_REQUEST,
+          payload: {
+            // ...document,
+            ...getPostContent,
+            currentUserUid: uid,
+          },
+        });
+      } else {
+        alert("본인의 글에는 추천할 수 없습니다");
+      }
+    } else {
+      alert("로그인한 사용자만 가능합니다");
+    }
+  };
+
+  const onClickDownVote = () => {
+    if (uid) {
+      if (uid !== creatorUid) {
+        dispatch({
+          type: POST_DOWN_VOTE_REQUEST,
+          payload: {
+            ...getPostContent,
+            currentUserUid: uid,
+          },
+        });
+      } else {
+        alert("본인의 글에는 비추천할 수 없습니다");
+      }
+    } else {
+      alert("로그인한 사용자만 가능합니다");
+    }
   };
 
   return (
@@ -151,11 +192,11 @@ const PostContent = () => {
       />
 
       <div id="voteDiv">
-        <Button onClick={onClickVote} variant="primary">
+        <Button onClick={onClickUpVote} variant="primary">
           {upVote ? upVote.length : null} 추천
         </Button>
 
-        <Button variant="primary">
+        <Button onClick={onClickDownVote} variant="primary">
           {downVote ? downVote.length : null} 비추천
         </Button>
       </div>
