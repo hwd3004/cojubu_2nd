@@ -1,4 +1,3 @@
-import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import {
   useHistory,
@@ -9,13 +8,26 @@ import {
 import BalloonEditor from "@ckeditor/ckeditor5-editor-balloon/src/ballooneditor";
 import { editorConfiguration } from "components/editor/EditorConfig";
 import CKEditor from "@ckeditor/ckeditor5-react";
-import { Button, Modal } from "react-bootstrap";
+import {
+  Button,
+  Form,
+  FormControl,
+  FormGroup,
+  FormLabel,
+  Modal,
+  Table,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  COMMENT_WRITE_REQUEST,
   POST_CONTENT_REQUEST,
+  POST_DELETE_REQUEST,
   POST_DOWN_VOTE_REQUEST,
   POST_UP_VOTE_REQUEST,
 } from "redux/types";
+import moment from "moment";
+import shortid from "shortid";
+import { authService } from "fbase";
 
 const PostContent = () => {
   const { id } = useParams();
@@ -28,16 +40,18 @@ const PostContent = () => {
 
   // const [document, setDocument] = useState({});
 
-  const { uid } = useSelector((state) => state.auth);
+  const { uid, isLoggedIn, nickname } = useSelector((state) => state.auth);
+  const getPostContent = useSelector((state) => state.post);
 
   const [showModalToDelete, setShowModalToDelete] = useState(false);
   const handleCloseModalToDelete = () => setShowModalToDelete(false);
   const handleShowModalToDelete = () => setShowModalToDelete(true);
 
+  const [inputComment, setInputComment] = useState("");
+
   const dispatch = useDispatch();
 
-  const getPostContent = useSelector((state) => state.post);
-
+  // eslint-disable-next-line no-unused-vars
   let divClassName, dbName;
 
   const getURL = id.split("-");
@@ -59,8 +73,17 @@ const PostContent = () => {
   }
 
   const executeDeletePost = async () => {
-    await dbService.collection(`${dbName}`).doc(`${id}`).delete();
-    history.goBack();
+    // await dbService.collection(`${dbName}`).doc(`${id}`).delete();
+
+    dispatch({
+      type: POST_DELETE_REQUEST,
+      payload: {
+        ...getPostContent,
+        currentUserUid: uid,
+      },
+    });
+
+    history.push("/");
   };
 
   const modalAskDelete = (
@@ -80,35 +103,52 @@ const PostContent = () => {
     </Modal>
   );
 
-  const getContent = async () => {
-    dispatch({
-      type: POST_CONTENT_REQUEST,
-      payload: url,
-    });
+  // const getContent = async () => {
+  //   const data = {
+  //     url,
+  //     uid,
+  //   };
 
-    // const contentRef = await dbService.collection(`${dbName}`).doc(`${id}`);
-    // await contentRef.get().then((doc) => {
-    //   setDocument(doc.data());
-    // });
-    //
-    //
-    //
-    // https://firebase.google.com/docs/firestore/query-data/listen?hl=ko
-    // 클라우드 파이어 스토어 실시간 업데이트
-    // 구글 검색 - 파이어베이스 onsnapshot
-    // Firestore 사용시 주의점 - 토리토시스템 :: 토리토시스템 - 티스토리
-    // https://toritosystem.tistory.com/8
-    // const postRef = await dbService
-    //   .collection(`${dbName}`)
-    //   .doc(`${id}`)
-    //   .onSnapshot((snapshot) => {
-    //     // console.log(snapshot.data());
-    //     setDocument(snapshot.data());
-    //   });
-  };
+  //   dispatch({
+  //     type: POST_CONTENT_REQUEST,
+  //     payload: data,
+  //   });
+
+  //   // const contentRef = await dbService.collection(`${dbName}`).doc(`${id}`);
+  //   // await contentRef.get().then((doc) => {
+  //   //   setDocument(doc.data());
+  //   // });
+  //   //
+  //   //
+  //   //
+  //   // https://firebase.google.com/docs/firestore/query-data/listen?hl=ko
+  //   // 클라우드 파이어 스토어 실시간 업데이트
+  //   // 구글 검색 - 파이어베이스 onsnapshot
+  //   // Firestore 사용시 주의점 - 토리토시스템 :: 토리토시스템 - 티스토리
+  //   // https://toritosystem.tistory.com/8
+  //   // const postRef = await dbService
+  //   //   .collection(`${dbName}`)
+  //   //   .doc(`${id}`)
+  //   //   .onSnapshot((snapshot) => {
+  //   //     // console.log(snapshot.data());
+  //   //     setDocument(snapshot.data());
+  //   //   });
+  // };
 
   useEffect(() => {
-    getContent();
+    authService.onAuthStateChanged((user) => {
+      if (user) {
+        const data = {
+          url,
+          uid: authService.currentUser.uid,
+        };
+        dispatch({
+          type: POST_CONTENT_REQUEST,
+          payload: data,
+        });
+      }
+    });
+    // getContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -130,6 +170,7 @@ const PostContent = () => {
     creatorUid,
     upVote,
     downVote,
+    comment,
   } = getPostContent;
 
   const onClickUpVote = () => {
@@ -169,6 +210,38 @@ const PostContent = () => {
     }
   };
 
+  const onSubmitComment = (event) => {
+    event.preventDefault();
+
+    const data = {
+      commentDetail: inputComment,
+      commenterUid: uid,
+      commenterNickanme: nickname,
+      commentCreatedAt: moment().format("YYYY-MM-DD HH:mm:ss"),
+      unreadReply: false,
+      commentUid: shortid.generate(),
+      reply: [],
+    };
+
+    dispatch({
+      type: COMMENT_WRITE_REQUEST,
+      payload: {
+        ...getPostContent,
+        comment: data,
+      },
+    });
+
+    setInputComment("");
+  };
+
+  const onChangeComment = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    setInputComment(value);
+  };
+
   return (
     <div className={`${divClassName}`}>
       {modalAskDelete}
@@ -201,17 +274,78 @@ const PostContent = () => {
         </Button>
       </div>
 
-      <Button className="mr-1" variant="dark" onClick={() => history.goBack()}>
-        Back
-      </Button>
+      <br></br>
 
-      {creatorUid === uid ? (
-        <>
-          <Button className="mr-1">수정</Button>
-          <Button className="mr-1" onClick={handleShowModalToDelete}>
-            삭제
-          </Button>
-        </>
+      <div>
+        <Button
+          className="mr-1"
+          variant="dark"
+          onClick={() => history.goBack()}
+        >
+          Back
+        </Button>
+
+        {creatorUid === uid ? (
+          <>
+            <Button className="mr-1">수정</Button>
+            <Button className="mr-1" onClick={handleShowModalToDelete}>
+              삭제
+            </Button>
+          </>
+        ) : null}
+      </div>
+
+      <br></br>
+
+      <Table responsive>
+        {comment.length > 0 &&
+          comment.map((item, index) => {
+            const {
+              commentCreatedAt,
+              commentDetail,
+              // eslint-disable-next-line no-unused-vars
+              commentUid,
+              commenterNickanme,
+              // eslint-disable-next-line no-unused-vars
+              commenterUid,
+              // eslint-disable-next-line no-unused-vars
+              reply,
+            } = item;
+
+            return (
+              <>
+                <tr>
+                  <td>
+                    {commenterNickanme}
+                    &nbsp; | &nbsp;
+                    {commentCreatedAt}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{commentDetail}</td>
+                </tr>
+              </>
+            );
+          })}
+      </Table>
+
+      {isLoggedIn ? (
+        <Form onSubmit={onSubmitComment}>
+          <FormGroup>
+            <FormLabel>댓글 쓰기</FormLabel>
+            <FormControl
+              onChange={onChangeComment}
+              value={inputComment}
+              name="comment"
+              as="textarea"
+              minLength="2"
+              maxLength="200"
+              rows="4"
+              style={{ resize: "none" }}
+            />
+            <Button type="submit">댓글 등록</Button>
+          </FormGroup>
+        </Form>
       ) : null}
     </div>
   );

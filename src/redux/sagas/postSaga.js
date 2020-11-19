@@ -10,8 +10,192 @@ import {
   POST_DOWN_VOTE_REQUEST,
   POST_DOWN_VOTE_FAILURE,
   POST_DOWN_VOTE_SUCCESS,
+  POST_DELETE_REQUEST,
+  COMMENT_WRITE_REQUEST,
+  COMMENT_WRITE_SUCCESS,
+  COMMENT_WRITE_FAILURE,
 } from "../types";
 import * as firebase from "firebase";
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+// 코멘트 등록
+
+const commentWriteAPI = async (data) => {
+  const { category, url, comment } = data;
+  const { commenterUid } = comment;
+
+  let dbName;
+
+  switch (category) {
+    case "코인":
+      dbName = "CoinPostDB";
+      break;
+
+    case "주식":
+      dbName = "StockPostDB";
+      break;
+
+    default:
+      break;
+  }
+
+  try {
+    const postRef = await dbService.collection(`${dbName}`).doc(url);
+
+    await postRef.update({
+      comment: firebase.firestore.FieldValue.arrayUnion(comment),
+      unreadComment: true,
+    });
+
+    await dbService
+      .collection("userDB")
+      .doc(commenterUid)
+      .update({
+        point: firebase.firestore.FieldValue.increment(1),
+      });
+
+    const postDB = await postRef.get();
+
+    return postDB.data();
+  } catch (error) {
+    console.log("commentWriteAPI", error);
+    alert("commentWriteAPI", error);
+  }
+};
+
+function* commentWrite(action) {
+  try {
+    const result = yield call(commentWriteAPI, action.payload);
+
+    yield put({
+      type: COMMENT_WRITE_SUCCESS,
+      payload: result,
+    });
+  } catch (error) {
+    yield put({
+      type: COMMENT_WRITE_FAILURE,
+    });
+
+    console.log("commentWrite", error);
+    alert("commentWrite", error);
+  }
+}
+
+function* watchCommentWrite() {
+  yield takeEvery(COMMENT_WRITE_REQUEST, commentWrite);
+}
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+// 글삭제
+
+const postDeleteAPI = async (postData) => {
+  try {
+    console.log("postDeleteAPI", postData);
+
+    // eslint-disable-next-line no-unused-vars
+    const { url, category, currentUserUid, creatorUid } = postData;
+
+    let dbName;
+
+    switch (category) {
+      case "코인":
+        dbName = "CoinPostDB";
+        break;
+
+      case "주식":
+        dbName = "StockPostDB";
+        break;
+
+      default:
+        break;
+    }
+
+    // if (currentUserUid === creatorUid) {
+    // }
+    const postRef = await dbService.collection(`${dbName}`).doc(url);
+
+    let countUpVote;
+
+    await postRef.get().then((doc) => {
+      countUpVote = doc.data().upVote.length * 5;
+    });
+
+    const recallPoint = countUpVote + 5;
+
+    await postRef.delete();
+
+    await dbService
+      .collection("userDB")
+      .doc(creatorUid)
+      .update({
+        point: firebase.firestore.FieldValue.increment(-recallPoint),
+      });
+
+    return postData;
+  } catch (error) {
+    console.log("postDeleteAPI", error);
+    alert("postDeleteAPI", error);
+  }
+};
+
+function* postDelete(action) {
+  try {
+    const result = yield call(postDeleteAPI, action.payload);
+
+    yield put({
+      type: POST_CONTENT_SUCCESS,
+      payload: result,
+    });
+  } catch (error) {
+    yield put({
+      type: POST_CONTENT_FAILURE,
+    });
+    console.log("postDelete", error);
+    alert("postDelete");
+  }
+}
+
+function* watchPostDelete() {
+  yield takeEvery(POST_DELETE_REQUEST, postDelete);
+}
 
 //
 //
@@ -36,7 +220,9 @@ import * as firebase from "firebase";
 // 포스트 컨텐츠 불러오기
 const postContentAPI = async (postData) => {
   try {
-    let getUrl = postData.split("/");
+    const { url, uid } = postData;
+
+    let getUrl = url.split("/");
     getUrl = getUrl[1];
 
     const findDB = getUrl.split("-");
@@ -56,12 +242,24 @@ const postContentAPI = async (postData) => {
         break;
     }
 
-    const getPostContent = await dbService
+    await dbService
       .collection(`${dbName}`)
       .doc(getUrl)
-      .get();
+      .update({
+        views: firebase.firestore.FieldValue.increment(1),
+      });
 
-    return getPostContent.data();
+    const postRef = await dbService.collection(`${dbName}`).doc(getUrl).get();
+
+    const postDB = await postRef.data();
+
+    if (uid === postDB.creatorUid) {
+      await dbService.collection(`${dbName}`).doc(getUrl).update({
+        unreadComment: false,
+      });
+    }
+
+    return postDB;
   } catch (error) {
     console.log(error);
     alert(error);
@@ -373,5 +571,7 @@ export default function* postSaga() {
     fork(watchPostUpVote),
     fork(watchPostContent),
     fork(watchPostDownVote),
+    fork(watchPostDelete),
+    fork(watchCommentWrite),
   ]);
 }

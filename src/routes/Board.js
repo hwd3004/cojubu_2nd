@@ -19,19 +19,27 @@ const Board = () => {
   // console.log("location", location);
   // console.log("match", match);
 
-  const { path } = match;
+  const { path, params } = match;
+
+  // console.log("params.id", params.id);
+  // console.log(typeof params.id);
+  // 문자형이라서 숫자로 바꿔주어야한다
+
+  // console.log("path", path);
 
   let divClassName, category, linkToWrite, dbName;
 
+  console.log(path)
+
   switch (path) {
-    case "/Coin":
+    case "/Coin/page=:id":
       divClassName = "Coin";
       category = "코인";
       linkToWrite = "CoinPostWrite";
       dbName = "CoinPostDB";
       break;
 
-    case "/Stock":
+    case "/Stock/page=:id":
       divClassName = "Stock";
       category = "주식";
       linkToWrite = "StockPostWrite";
@@ -44,10 +52,18 @@ const Board = () => {
   }
 
   const getPost = async () => {
+    const nowPageNum = parseInt(params.id);
+
+    let getLimit = 1;
+
+    if (nowPageNum !== 1) {
+      getLimit = getLimit * 3;
+    }
+
     const postDB = await dbService
       .collection(`${dbName}`)
       .orderBy("time", "desc")
-      .limit(1)
+      .limit(getLimit)
       .get();
 
     if (postDB.docs.length > 0) {
@@ -118,8 +134,8 @@ const Board = () => {
                     />
                   </td>
                   <td className="td_title">
-                    <Link to={`${id}`}>{title}&nbsp;</Link>
-                    <span>{comment.length !== 0 && +comment.length}</span>
+                    <Link to={`/${id}`}>{title}&nbsp;</Link>
+                    <span>{comment.length !== 0 && `+${comment.length}`}</span>
                   </td>
                   <td>{creatorNickname}</td>
                   <td>{createdAt}</td>

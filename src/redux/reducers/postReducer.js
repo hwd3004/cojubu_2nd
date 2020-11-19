@@ -8,6 +8,12 @@ import {
   POST_DOWN_VOTE_REQUEST,
   POST_DOWN_VOTE_SUCCESS,
   POST_DOWN_VOTE_FAILURE,
+  POST_DELETE_REQUEST,
+  POST_DELETE_SUCCESS,
+  POST_DELETE_FAILURE,
+  COMMENT_WRITE_REQUEST,
+  COMMENT_WRITE_SUCCESS,
+  COMMENT_WRITE_FAILURE,
 } from "redux/types";
 
 const initialState = {
@@ -33,6 +39,8 @@ export default function (state = initialState, action) {
     case POST_CONTENT_REQUEST:
     case POST_UP_VOTE_REQUEST:
     case POST_DOWN_VOTE_REQUEST:
+    case POST_DELETE_REQUEST:
+    case COMMENT_WRITE_REQUEST:
       return {
         ...state,
         isLoading: true,
@@ -41,6 +49,8 @@ export default function (state = initialState, action) {
     case POST_CONTENT_SUCCESS:
     case POST_UP_VOTE_SUCCESS:
     case POST_DOWN_VOTE_SUCCESS:
+    case POST_DELETE_SUCCESS:
+    case COMMENT_WRITE_SUCCESS:
       return {
         ...state,
         ...action.payload,
@@ -64,6 +74,8 @@ export default function (state = initialState, action) {
     case POST_CONTENT_FAILURE:
     case POST_UP_VOTE_FAILURE:
     case POST_DOWN_VOTE_FAILURE:
+    case POST_DELETE_FAILURE:
+    case COMMENT_WRITE_FAILURE:
       return {
         ...state,
         ...action.payload,

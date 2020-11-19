@@ -19,13 +19,13 @@ const AppRouter = () => {
         <Header />
 
         <nav>
-          <Button variant="info" as={Link} to="/Skyrocket">
+          <Button variant="info" as={Link} to="/Skyrocket/page=1">
             떡상
           </Button>
-          <Button variant="info" as={Link} to="/Coin">
+          <Button variant="info" as={Link} to="/Coin/page=1">
             코인
           </Button>
-          <Button variant="info" as={Link} to="/Stock">
+          <Button variant="info" as={Link} to="/Stock/page=1">
             주식
           </Button>
         </nav>
@@ -42,10 +42,10 @@ const AppRouter = () => {
               <Skyrocket />
             </Route>
 
-            <Route exact path="/Coin">
+            <Route exact path="/Coin/page=:id">
               <Board />
             </Route>
-            <Route exact path="/Stock">
+            <Route exact path="/Stock/page=:id">
               <Board />
             </Route>
 
