@@ -30,6 +30,12 @@ export const GET_POINT_WHEN_POST_FAILURE = "GET_POINT_WHEN_POST_FAILURE";
 
 //
 //
+//
+//
+//
+//
+//
+//
 // postReducer, postSaga
 
 // 포스트 컨텐츠 불러오기
@@ -52,8 +58,21 @@ export const POST_DELETE_REQUEST = "POST_DELETE_REQUEST";
 export const POST_DELETE_SUCCESS = "POST_DELETE_SUCCESS";
 export const POST_DELETE_FAILURE = "POST_DELETE_FAILURE";
 
-// 댓글 작성
+//
+//
+//
+//
+//
+//
+//
+// commentReducer, commentSaga
 
+// 댓글 작성
 export const COMMENT_WRITE_REQUEST = "COMMENT_WRITE_REQUEST";
 export const COMMENT_WRITE_SUCCESS = "COMMENT_WRITE_SUCCESS";
 export const COMMENT_WRITE_FAILURE = "COMMENT_WRITE_FAILURE";
+
+// 댓글 불러오기
+export const COMMENT_CONTENT_REQUEST = "COMMENT_CONTENT_REQUEST";
+export const COMMENT_CONTENT_SUCCESS = "COMMENT_CONTENT_SUCCESS";
+export const COMMENT_CONTENT_FAILURE = "COMMENT_CONTENT_FAILURE";

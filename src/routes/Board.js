@@ -29,8 +29,6 @@ const Board = () => {
 
   let divClassName, category, linkToWrite, dbName;
 
-  console.log(path)
-
   switch (path) {
     case "/Coin/page=:id":
       divClassName = "Coin";

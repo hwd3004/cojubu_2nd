@@ -186,26 +186,11 @@ const loginUserAPI = async (loginData) => {
 
     const uid = await authService.currentUser.uid;
 
-    const userRef = await dbService
-      .collection("userDB")
-      .doc(uid)
-      .get()
-      .then((doc) => {
-        return doc.data();
-      });
+    const userRef = await dbService.collection("userDB").doc(uid).get();
 
-    const { nickname, permission, signUpDay, emailVerified, point } = userRef;
+    const currentUser = await userRef.data();
 
-    return {
-      email,
-      password,
-      uid,
-      nickname,
-      permission,
-      signUpDay,
-      emailVerified,
-      point,
-    };
+    return currentUser;
   } catch (error) {
     if (error.code === "auth/user-not-found") {
       alert("등록되지않은 이메일입니다.");

@@ -11,98 +11,28 @@ import {
   POST_DOWN_VOTE_FAILURE,
   POST_DOWN_VOTE_SUCCESS,
   POST_DELETE_REQUEST,
-  COMMENT_WRITE_REQUEST,
-  COMMENT_WRITE_SUCCESS,
-  COMMENT_WRITE_FAILURE,
 } from "../types";
 import * as firebase from "firebase";
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-// 코멘트 등록
+// 포스트 컨텐츠 불러오기 - postContentAPI는 직접 수정해줘야함
+const findDBNameByCategory = (inputCategory) => {
+  let getDBName;
 
-const commentWriteAPI = async (data) => {
-  const { category, url, comment } = data;
-  const { commenterUid } = comment;
-
-  let dbName;
-
-  switch (category) {
+  switch (inputCategory) {
     case "코인":
-      dbName = "CoinPostDB";
+      getDBName = "CoinPostDB";
       break;
 
     case "주식":
-      dbName = "StockPostDB";
+      getDBName = "StockPostDB";
       break;
 
     default:
       break;
   }
 
-  try {
-    const postRef = await dbService.collection(`${dbName}`).doc(url);
-
-    await postRef.update({
-      comment: firebase.firestore.FieldValue.arrayUnion(comment),
-      unreadComment: true,
-    });
-
-    await dbService
-      .collection("userDB")
-      .doc(commenterUid)
-      .update({
-        point: firebase.firestore.FieldValue.increment(1),
-      });
-
-    const postDB = await postRef.get();
-
-    return postDB.data();
-  } catch (error) {
-    console.log("commentWriteAPI", error);
-    alert("commentWriteAPI", error);
-  }
+  return getDBName;
 };
-
-function* commentWrite(action) {
-  try {
-    const result = yield call(commentWriteAPI, action.payload);
-
-    yield put({
-      type: COMMENT_WRITE_SUCCESS,
-      payload: result,
-    });
-  } catch (error) {
-    yield put({
-      type: COMMENT_WRITE_FAILURE,
-    });
-
-    console.log("commentWrite", error);
-    alert("commentWrite", error);
-  }
-}
-
-function* watchCommentWrite() {
-  yield takeEvery(COMMENT_WRITE_REQUEST, commentWrite);
-}
 
 //
 //
@@ -131,43 +61,32 @@ const postDeleteAPI = async (postData) => {
     console.log("postDeleteAPI", postData);
 
     // eslint-disable-next-line no-unused-vars
-    const { url, category, currentUserUid, creatorUid } = postData;
+    const { url, category, currentUserUid, creatorUid, permission } = postData;
 
-    let dbName;
+    const dbName = findDBNameByCategory(category);
 
-    switch (category) {
-      case "코인":
-        dbName = "CoinPostDB";
-        break;
+    if (currentUserUid === creatorUid || permission === "admin") {
+      const postRef = await dbService.collection(`${dbName}`).doc(url);
 
-      case "주식":
-        dbName = "StockPostDB";
-        break;
+      let countUpVote;
 
-      default:
-        break;
-    }
-
-    // if (currentUserUid === creatorUid) {
-    // }
-    const postRef = await dbService.collection(`${dbName}`).doc(url);
-
-    let countUpVote;
-
-    await postRef.get().then((doc) => {
-      countUpVote = doc.data().upVote.length * 5;
-    });
-
-    const recallPoint = countUpVote + 5;
-
-    await postRef.delete();
-
-    await dbService
-      .collection("userDB")
-      .doc(creatorUid)
-      .update({
-        point: firebase.firestore.FieldValue.increment(-recallPoint),
+      await postRef.get().then((doc) => {
+        countUpVote = doc.data().upVote.length * 5;
       });
+
+      const recallPoint = countUpVote + 5;
+
+      await postRef.delete();
+
+      await dbService
+        .collection("userDB")
+        .doc(creatorUid)
+        .update({
+          point: firebase.firestore.FieldValue.increment(-recallPoint),
+        });
+    } else {
+      alert("삭제할 수 없습니다");
+    }
 
     return postData;
   } catch (error) {
@@ -312,20 +231,7 @@ const postUpVoteAPI = async (postData) => {
   try {
     const { url, category, currentUserUid, creatorUid } = postData;
 
-    let dbName;
-
-    switch (category) {
-      case "코인":
-        dbName = "CoinPostDB";
-        break;
-
-      case "주식":
-        dbName = "StockPostDB";
-        break;
-
-      default:
-        break;
-    }
+    const dbName = findDBNameByCategory(category);
 
     let yesUpVote = [];
 
@@ -441,20 +347,7 @@ const postDownVoteAPI = async (postData) => {
   try {
     const { url, category, currentUserUid, creatorUid } = postData;
 
-    let dbName;
-
-    switch (category) {
-      case "코인":
-        dbName = "CoinPostDB";
-        break;
-
-      case "주식":
-        dbName = "StockPostDB";
-        break;
-
-      default:
-        break;
-    }
+    const dbName = findDBNameByCategory(category);
 
     let yesDownVote = [];
 
@@ -572,6 +465,5 @@ export default function* postSaga() {
     fork(watchPostContent),
     fork(watchPostDownVote),
     fork(watchPostDelete),
-    fork(watchCommentWrite),
   ]);
 }
