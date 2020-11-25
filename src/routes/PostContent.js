@@ -19,6 +19,7 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  COMMENT_CONTENT_REQUEST,
   COMMENT_WRITE_REQUEST,
   POST_CONTENT_REQUEST,
   POST_DELETE_REQUEST,
@@ -28,6 +29,7 @@ import {
 import moment from "moment";
 import shortid from "shortid";
 import { authService } from "fbase";
+import Comment from "components/Comment";
 
 const PostContent = () => {
   const { id } = useParams();
@@ -184,7 +186,61 @@ const PostContent = () => {
     upVote,
     downVote,
     comment,
+    isLoading,
   } = getPostContent;
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+
+  useEffect(() => {
+    dispatch({
+      type: COMMENT_CONTENT_REQUEST,
+      payload: comment,
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [comment]);
+
+  const getCommentContent = useSelector((state) => state.comment);
+  console.log("getCommentContent", getCommentContent);
+
+  // const [commentList, setCommentList] = useState([]);
+
+  // useEffect(() => {
+  //   setCommentList(getCommentContent);
+
+  //   console.log("commentList", commentList);
+  // }, [getCommentContent]);
 
   const onClickUpVote = () => {
     if (uid) {
@@ -266,111 +322,98 @@ const PostContent = () => {
   };
 
   return (
-    <div className={`${divClassName}`}>
-      {modalAskDelete}
-      <Button className="mt-1" variant="dark" onClick={() => history.goBack()}>
-        Back
-      </Button>
+    <>
+      {!isLoading ? (
+        <div className={`${divClassName}`}>
+          {modalAskDelete}
+          <Button
+            className="mt-1"
+            variant="dark"
+            onClick={() => history.goBack()}
+          >
+            Back
+          </Button>
 
-      <div className="d-flex mt-1">
-        <h1>{title}</h1>
-        <div className="ml-auto">
-          <span className="mr-5">{creatorNickname}</span>
-          <span>{createdAt}</span>
-        </div>
-      </div>
+          <div className="d-flex mt-1">
+            <h1>{title}</h1>
+            <div className="ml-auto">
+              <span className="mr-5">{creatorNickname}</span>
+              <span>{createdAt}</span>
+            </div>
+          </div>
 
-      <CKEditor
-        editor={BalloonEditor}
-        data={contents}
-        config={editorConfiguration}
-        disabled="true"
-      />
+          <CKEditor
+            editor={BalloonEditor}
+            data={contents}
+            config={editorConfiguration}
+            disabled="true"
+          />
 
-      <div id="voteDiv">
-        <Button onClick={onClickUpVote} variant="primary">
-          {upVote ? upVote.length : null} 추천
-        </Button>
-
-        <Button onClick={onClickDownVote} variant="primary">
-          {downVote ? downVote.length : null} 비추천
-        </Button>
-      </div>
-
-      <br></br>
-
-      <div>
-        <Button
-          className="mr-1"
-          variant="dark"
-          onClick={() => history.goBack()}
-        >
-          Back
-        </Button>
-
-        {creatorUid === uid || permission === "admin" ? (
-          <>
-            <Button className="mr-1">수정</Button>
-            <Button className="mr-1" onClick={handleShowModalToDelete}>
-              삭제
+          <div id="voteDiv">
+            <Button onClick={onClickUpVote} variant="primary">
+              {upVote ? upVote.length : null} 추천
             </Button>
-          </>
-        ) : null}
-      </div>
 
-      <br></br>
+            <Button onClick={onClickDownVote} variant="primary">
+              {downVote ? downVote.length : null} 비추천
+            </Button>
+          </div>
 
-      <Table responsive>
-        {comment.length > 0 &&
-          comment.map((item, index) => {
-            const {
-              commentCreatedAt,
-              commentDetail,
-              // eslint-disable-next-line no-unused-vars
-              commentUid,
-              commenterNickanme,
-              // eslint-disable-next-line no-unused-vars
-              commenterUid,
-              // eslint-disable-next-line no-unused-vars
-              reply,
-            } = item;
+          <br></br>
 
-            return (
+          <div>
+            <Button
+              className="mr-1"
+              variant="dark"
+              onClick={() => history.goBack()}
+            >
+              Back
+            </Button>
+
+            {creatorUid === uid || permission === "admin" ? (
               <>
-                <tr>
-                  <td>
-                    {commenterNickanme}
-                    &nbsp; | &nbsp;
-                    {commentCreatedAt}
-                  </td>
-                </tr>
-                <tr>
-                  <td>{commentDetail}</td>
-                </tr>
+                <Button className="mr-1">수정</Button>
+                <Button className="mr-1" onClick={handleShowModalToDelete}>
+                  삭제
+                </Button>
               </>
-            );
-          })}
-      </Table>
+            ) : null}
+          </div>
 
-      {isLoggedIn ? (
-        <Form onSubmit={onSubmitComment}>
-          <FormGroup>
-            <FormLabel>댓글 쓰기</FormLabel>
-            <FormControl
-              onChange={onChangeComment}
-              value={inputComment}
-              name="comment"
-              as="textarea"
-              minLength="2"
-              maxLength="200"
-              rows="4"
-              style={{ resize: "none" }}
-            />
-            <Button type="submit">댓글 등록</Button>
-          </FormGroup>
-        </Form>
+          <br></br>
+
+          {getCommentContent.comment.length > 0 &&
+            getCommentContent.comment.map((item, index) => {
+              return (
+                <Comment
+                  key={index}
+                  item={item}
+                  isLoading={getCommentContent.isLoading}
+                />
+              );
+            })}
+
+          {isLoggedIn ? (
+            <Form onSubmit={onSubmitComment}>
+              <FormGroup>
+                <FormLabel>댓글 쓰기</FormLabel>
+                <FormControl
+                  onChange={onChangeComment}
+                  value={inputComment}
+                  name="comment"
+                  as="textarea"
+                  minLength="2"
+                  maxLength="200"
+                  rows="4"
+                  style={{ resize: "none" }}
+                />
+                <Button type="submit">댓글 등록</Button>
+              </FormGroup>
+            </Form>
+          ) : null}
+        </div>
       ) : null}
-    </div>
+    </>
   );
 };
 
