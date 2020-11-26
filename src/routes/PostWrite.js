@@ -33,6 +33,10 @@ const PostWrite = () => {
 
   let category, dbName, urlPrefix, divClassName;
 
+  if (!authService.currentUser.emailVerified) {
+    history.push("/");
+  }
+
   // const [divClassName, setDivClassName] = useState("");
 
   // useEffect(() => {

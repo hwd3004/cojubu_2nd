@@ -2,12 +2,13 @@
 import React from "react";
 import { Button, Nav, Navbar } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { LOGOUT_REQUEST } from "redux/types";
 
 const Profile = () => {
   const dispatch = useDispatch();
 
-  const { nickname, point } = useSelector((state) => state.auth);
+  const { nickname } = useSelector((state) => state.auth);
 
   const onLogOut = () => {
     dispatch({
@@ -18,9 +19,11 @@ const Profile = () => {
 
   return (
     <Nav className="ml-auto">
-      <Navbar.Brand>
-        sup. {nickname} | {point} point
-      </Navbar.Brand>
+      <Navbar.Brand>{nickname}</Navbar.Brand>
+      <Button as={Link} to="/MyProfile" variant="outline-primary">
+        프로필
+      </Button>
+      &nbsp;&nbsp;&nbsp;
       <Button onClick={onLogOut} variant="outline-primary">
         로그아웃
       </Button>

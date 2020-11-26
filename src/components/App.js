@@ -18,6 +18,8 @@ const App = () => {
           // const { email, uid } = user;
           const { uid } = user;
 
+          console.log("onAuthStateChanged(user)", user);
+
           const payload = {
             // email,
             uid,

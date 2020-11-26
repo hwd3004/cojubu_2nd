@@ -65,17 +65,48 @@ function* watchGetPointWhenPost() {
 
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // 로그인된 유저 정보 불러오기
 
 const userLoadingAPI = async (loadingData) => {
   try {
+    console.log("userLoadingAPI", loadingData);
+
     const { uid } = loadingData;
 
-    const userRef = await dbService
+    let userRef = await dbService
       .collection("userDB")
       .doc(uid)
       .get()
       .then((doc) => doc.data());
+
+    if (
+      authService.currentUser.emailVerified === true &&
+      userRef.emailVerified === false
+    ) {
+      await dbService.collection("userDB").doc(uid).update({
+        emailVerified: true,
+      });
+
+      userRef.emailVerified = true;
+    }
 
     return userRef;
   } catch (error) {
@@ -106,6 +137,24 @@ function* watchUserLoading() {
 
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // 회원가입
 
 const signUpUserAPI = async (signUpData) => {
@@ -115,6 +164,8 @@ const signUpUserAPI = async (signUpData) => {
     const signUpDay = moment().format("YYYY-MM-DD HH:mm:ss");
 
     await authService.createUserWithEmailAndPassword(email, password);
+
+    await authService.currentUser.sendEmailVerification();
 
     const uid = await authService.currentUser.uid;
 
@@ -176,10 +227,30 @@ function* watchSignUpUser() {
 
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // 로그인
 
 const loginUserAPI = async (loginData) => {
   try {
+    console.log("loginUserAPI", loginData);
+
     const { email, password } = loginData;
 
     await authService.signInWithEmailAndPassword(email, password);
@@ -221,6 +292,24 @@ function* watchLoginUser() {
   yield takeEvery(LOGIN_REQUEST, loginUser);
 }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 // 로그아웃

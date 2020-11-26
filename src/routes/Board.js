@@ -1,13 +1,20 @@
-import { dbService } from "fbase";
+import { authService, dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import { Button, NavbarBrand, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
-// eslint-disable-next-line no-unused-vars
-import { Link, useLocation, useParams, useRouteMatch } from "react-router-dom";
+import {
+  Link,
+  useHistory,
+  useLocation,
+  useParams,
+  useRouteMatch,
+} from "react-router-dom";
 import "scss/Board.scss";
 
 const Board = () => {
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  // const { isLoggedIn } = useSelector((state) => state.auth);
+
+  const history = useHistory();
 
   const [list, setList] = useState([]);
 
@@ -91,6 +98,20 @@ const Board = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
 
+  const checkEmailVerifiedToPostWrite = () => {
+    if (authService.currentUser) {
+      authService.currentUser.reload();
+
+      if (authService.currentUser.emailVerified) {
+        history.push(`/${linkToWrite}`);
+      } else {
+        alert("이메일 인증이 완료된 사용자만 글쓰기가 가능합니다.");
+      }
+    } else {
+      alert("이메일 인증이 완료된 사용자만 글쓰기가 가능합니다.");
+    }
+  };
+
   return (
     <div className={divClassName}>
       <NavbarBrand>{category}</NavbarBrand>
@@ -149,11 +170,11 @@ const Board = () => {
         </tbody>
       </Table>
 
-      {isLoggedIn ? (
-        <Button as={Link} to={`/${linkToWrite}`}>
-          글쓰기
-        </Button>
-      ) : null}
+      {/* <Button as={Link} to={`/${linkToWrite}`}>
+        글쓰기
+      </Button> */}
+
+      <Button onClick={checkEmailVerifiedToPostWrite}>글쓰기</Button>
     </div>
   );
 };

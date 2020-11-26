@@ -15,7 +15,6 @@ import {
   FormGroup,
   FormLabel,
   Modal,
-  Table,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -279,38 +278,64 @@ const PostContent = () => {
     }
   };
 
+  const checkEmailVerifiedToComment = () => {
+    let emailVerified;
+
+    if (authService.currentUser) {
+      authService.currentUser.reload();
+
+      if (authService.currentUser.emailVerified) {
+        emailVerified = true;
+      } else {
+        alert("이메일 인증이 완료된 사용자만 댓글쓰기가 가능합니다.");
+
+        emailVerified = false;
+      }
+    } else {
+      alert("이메일 인증이 완료된 사용자만 댓글쓰기가 가능합니다.");
+
+      emailVerified = false;
+    }
+
+    return emailVerified;
+  };
+
   const onSubmitComment = (event) => {
     event.preventDefault();
 
-    const data = {
-      commentId: `${divClassName}-${shortid.generate()}`,
+    const checkPermission = checkEmailVerifiedToComment();
 
-      commenterUid: uid,
-      commenterNickanme: nickname,
+    if (checkPermission) {
+      const data = {
+        commentId: `${divClassName}-${shortid.generate()}`,
 
-      commentContent: inputComment,
-      commentCreatedAt: moment().format("YYYY-MM-DD HH:mm:ss"),
+        commenterUid: uid,
+        commenterNickanme: nickname,
 
-      isDeleted: false,
+        commentContent: inputComment,
+        commentCreatedAt: moment().format("YYYY-MM-DD HH:mm:ss"),
 
-      commentUpVote: 0,
-      commentDownVote: 0,
+        isDeleted: false,
 
-      postUrl: getPostContent.url,
+        commentUpVote: 0,
+        commentDownVote: 0,
 
-      // 대댓글 구현시 부모댓글이 무엇인지
-      replyTo: null,
-    };
+        postUrl: getPostContent.url,
 
-    dispatch({
-      type: COMMENT_WRITE_REQUEST,
-      payload: {
-        ...getPostContent,
-        comment: data,
-      },
-    });
+        // 대댓글 구현시 부모댓글이 무엇인지
+        replyTo: null,
+      };
 
-    setInputComment("");
+      dispatch({
+        type: COMMENT_WRITE_REQUEST,
+        payload: {
+          ...getPostContent,
+          comment: data,
+        },
+      });
+
+      setInputComment("");
+    }
   };
 
   const onChangeComment = (event) => {
