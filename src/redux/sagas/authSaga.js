@@ -89,7 +89,7 @@ const userLoadingAPI = async (loadingData) => {
   try {
     console.log("userLoadingAPI", loadingData);
 
-    const { uid } = loadingData;
+    const uid = loadingData;
 
     let userRef = await dbService
       .collection("userDB")

@@ -20,9 +20,9 @@ const Profile = () => {
   return (
     <Nav className="ml-auto">
       <Navbar.Brand>{nickname}</Navbar.Brand>
-      <Button as={Link} to="/MyProfile" variant="outline-primary">
+      {/* <Button as={Link} to="/MyProfile" variant="outline-primary">
         프로필
-      </Button>
+      </Button> */}
       &nbsp;&nbsp;&nbsp;
       <Button onClick={onLogOut} variant="outline-primary">
         로그아웃

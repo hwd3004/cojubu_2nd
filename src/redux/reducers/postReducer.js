@@ -29,6 +29,7 @@ const initialState = {
   upVote: [],
   downVote: [],
   currentUserUid: null,
+  creatorPoint: 0,
 };
 
 export default function (state = initialState, action) {
@@ -64,6 +65,7 @@ export default function (state = initialState, action) {
         upVote: action.payload.upVote,
         downVote: action.payload.downVote,
         currentUserUid: action.payload.currentUserUid,
+        creatorPoint: action.payload.creatorPoint,
       };
 
     case POST_CONTENT_FAILURE:
@@ -88,6 +90,7 @@ export default function (state = initialState, action) {
         upVote: [],
         downVote: [],
         currentUserUid: null,
+        creatorPoint: 0,
       };
 
     default:

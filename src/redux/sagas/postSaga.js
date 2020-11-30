@@ -1,4 +1,4 @@
-import { dbService } from "fbase";
+import { dbService, firebaseInstance } from "fbase";
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
 import {
   POST_UP_VOTE_REQUEST,
@@ -12,10 +12,8 @@ import {
   POST_DOWN_VOTE_SUCCESS,
   POST_DELETE_REQUEST,
 } from "../types";
-import * as firebase from "firebase";
-import { findDBNameAndCommentDBNameByCategory } from "./commentSaga";
 
-// 포스트 컨텐츠 불러오기 - postContentAPI는 직접 수정해줘야함
+// 카테고리로 db 찾기 - postContentAPI는 직접 수정해줘야함
 const findDBNameByCategory = (inputCategory) => {
   let getDBName;
 
@@ -24,8 +22,20 @@ const findDBNameByCategory = (inputCategory) => {
       getDBName = "CoinPostDB";
       break;
 
-    case "주식":
+    case "국내주식":
       getDBName = "StockPostDB";
+      break;
+
+    case "해외주식":
+      getDBName = "OsStockPostDB";
+      break;
+
+    case "자유":
+      getDBName = "FreePostDB";
+      break;
+
+    case "게임":
+      getDBName = "GamePostDB";
       break;
 
     default:
@@ -34,6 +44,90 @@ const findDBNameByCategory = (inputCategory) => {
 
   return getDBName;
 };
+
+// 포스트 컨텐츠 불러오기
+const postContentAPI = async (postData) => {
+  try {
+    const { url, uid } = postData;
+
+    console.log("postData", postData);
+
+    let getUrl = url.split("/");
+    getUrl = getUrl[1];
+
+    const findDB = getUrl.split("-");
+
+    let dbName;
+
+    switch (findDB[0]) {
+      case "Coin":
+        dbName = "CoinPostDB";
+        break;
+
+      case "Stock":
+        dbName = "StockPostDB";
+        break;
+
+      case "OsStock":
+        dbName = "OsStockPostDB";
+        break;
+
+      case "Free":
+        dbName = "FreePostDB";
+        break;
+
+      case "Game":
+        dbName = "GamePostDB";
+        break;
+
+      default:
+        break;
+    }
+
+    await dbService
+      .collection(`${dbName}`)
+      .doc(getUrl)
+      .update({
+        views: firebaseInstance.firestore.FieldValue.increment(1),
+      });
+
+    const postRef = await dbService.collection(`${dbName}`).doc(getUrl).get();
+
+    const postDB = await postRef.data();
+
+    if (uid === postDB.creatorUid) {
+      await dbService.collection(`${dbName}`).doc(getUrl).update({
+        unreadComment: false,
+      });
+    }
+
+    return postDB;
+  } catch (error) {
+    console.log(error);
+    alert(error);
+  }
+};
+
+function* postContent(action) {
+  try {
+    const result = yield call(postContentAPI, action.payload);
+
+    yield put({
+      type: POST_CONTENT_SUCCESS,
+      payload: result,
+    });
+  } catch (error) {
+    yield put({
+      type: POST_CONTENT_FAILURE,
+    });
+    console.log("postUpVote", error);
+    alert("postUpVote", error);
+  }
+}
+
+function* watchPostContent() {
+  yield takeEvery(POST_CONTENT_REQUEST, postContent);
+}
 
 //
 //
@@ -109,7 +203,7 @@ const postDeleteAPI = async (postData) => {
         .collection("userDB")
         .doc(creatorUid)
         .update({
-          point: firebase.firestore.FieldValue.increment(-recallPoint),
+          point: firebaseInstance.firestore.FieldValue.increment(-recallPoint),
         });
     } else {
       alert("삭제할 수 없습니다");
@@ -163,96 +257,6 @@ function* watchPostDelete() {
 //
 //
 //
-// 포스트 컨텐츠 불러오기
-const postContentAPI = async (postData) => {
-  try {
-    const { url, uid } = postData;
-
-    let getUrl = url.split("/");
-    getUrl = getUrl[1];
-
-    const findDB = getUrl.split("-");
-
-    let dbName;
-
-    switch (findDB[0]) {
-      case "Coin":
-        dbName = "CoinPostDB";
-        break;
-
-      case "Stock":
-        dbName = "StockPostDB";
-        break;
-
-      default:
-        break;
-    }
-
-    await dbService
-      .collection(`${dbName}`)
-      .doc(getUrl)
-      .update({
-        views: firebase.firestore.FieldValue.increment(1),
-      });
-
-    const postRef = await dbService.collection(`${dbName}`).doc(getUrl).get();
-
-    const postDB = await postRef.data();
-
-    if (uid === postDB.creatorUid) {
-      await dbService.collection(`${dbName}`).doc(getUrl).update({
-        unreadComment: false,
-      });
-    }
-
-    return postDB;
-  } catch (error) {
-    console.log(error);
-    alert(error);
-  }
-};
-
-function* postContent(action) {
-  try {
-    const result = yield call(postContentAPI, action.payload);
-
-    yield put({
-      type: POST_CONTENT_SUCCESS,
-      payload: result,
-    });
-  } catch (error) {
-    yield put({
-      type: POST_CONTENT_FAILURE,
-    });
-    console.log("postUpVote", error);
-    alert("postUpVote", error);
-  }
-}
-
-function* watchPostContent() {
-  yield takeEvery(POST_CONTENT_REQUEST, postContent);
-}
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 // 글 추천
 const postUpVoteAPI = async (postData) => {
   try {
@@ -280,7 +284,7 @@ const postUpVoteAPI = async (postData) => {
           .collection("userDB")
           .doc(creatorUid)
           .update({
-            point: firebase.firestore.FieldValue.increment(5),
+            point: firebaseInstance.firestore.FieldValue.increment(5),
           });
       } catch (error) {
         console.log(error);
@@ -396,7 +400,7 @@ const postDownVoteAPI = async (postData) => {
           .collection("userDB")
           .doc(creatorUid)
           .update({
-            point: firebase.firestore.FieldValue.increment(-5),
+            point: firebaseInstance.firestore.FieldValue.increment(-5),
           });
       } catch (error) {
         console.log(error);

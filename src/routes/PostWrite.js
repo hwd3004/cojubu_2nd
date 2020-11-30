@@ -13,21 +13,18 @@ import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor"
 import { editorConfiguration } from "components/editor/EditorConfig";
 // import MyInit from "components/editor/UploadAdapter.js";
 import MyUploadAdapter from "components/editor/UploadAdapter.js";
-import { authService, dbService } from "fbase";
+import { authService, dbService, firebaseInstance } from "fbase";
 import moment from "moment";
 import shortid from "shortid";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_POINT_WHEN_POST_REQUEST } from "redux/types";
 
 const PostWrite = () => {
   const history = useHistory();
   const match = useRouteMatch();
   const auth = useSelector((state) => state.auth);
-  const { isLoggedIn, nickname } = auth;
+  const { isLoggedIn, nickname, point } = auth;
 
   console.log("PostWrite/auth", auth);
-
-  const dispatch = useDispatch();
 
   // console.log("uid, point?", uid, point);
 
@@ -67,13 +64,34 @@ const PostWrite = () => {
 
     case "/StockPostWrite":
       urlPrefix = "Stock";
-      category = "주식";
+      category = "국내주식";
       dbName = "StockPostDB";
       divClassName = "StockPostWrite";
       break;
 
+    case "/OsStockPostWrite":
+      urlPrefix = "OsStock";
+      category = "해외주식";
+      dbName = "OsStockPostDB";
+      divClassName = "OsStockPostWrite";
+      break;
+
+    case "/FreePostWrite":
+      urlPrefix = "Free";
+      category = "자유";
+      dbName = "FreePostDB";
+      divClassName = "FreePostWrite";
+      break;
+
+    case "/GamePostWrite":
+      urlPrefix = "Game";
+      category = "게임";
+      dbName = "GamePostDB";
+      divClassName = "GamePostWrite";
+      break;
+
     default:
-      alert("Board.js executed switch default.");
+      alert("PostWrite.js executed switch default.");
       break;
   }
 
@@ -99,6 +117,13 @@ const PostWrite = () => {
 
     const { title, contents, fileUrl } = form;
 
+    await dbService
+      .collection("userDB")
+      .doc(authService.currentUser.uid)
+      .update({
+        point: firebaseInstance.firestore.FieldValue.increment(+5),
+      });
+
     const newPost = {
       url,
       title,
@@ -116,6 +141,7 @@ const PostWrite = () => {
       unreadComment: false,
       views: 0,
       time: Date.now(),
+      creatorPoint: point,
     };
 
     // await dbService.collection("PostDB").doc(url).set(newPost);

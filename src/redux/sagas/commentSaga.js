@@ -1,6 +1,5 @@
-import { dbService } from "fbase";
+import { dbService, firebaseInstance } from "fbase";
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
-import * as firebase from "firebase";
 import {
   COMMENT_CONTENT_FAILURE,
   COMMENT_CONTENT_REQUEST,
@@ -19,9 +18,24 @@ export const findDBNameAndCommentDBNameByCategory = (inputCategory) => {
       commentDBName = "CoinCommentDB";
       break;
 
-    case "주식":
+    case "국내주식":
       dbName = "StockPostDB";
       commentDBName = "StockCommentDB";
+      break;
+
+    case "해외주식":
+      dbName = "OsStockPostDB";
+      commentDBName = "OsStockCommentDB";
+      break;
+
+    case "자유":
+      dbName = "FreePostDB";
+      commentDBName = "FreeCommentDB";
+      break;
+
+    case "게임":
+      dbName = "GamePostDB";
+      commentDBName = "GameCommentDB";
       break;
 
     default:
@@ -183,7 +197,7 @@ const commentWriteAPI = async (data) => {
     const postRef = await dbService.collection(`${dbName}`).doc(url);
 
     await postRef.update({
-      comment: firebase.firestore.FieldValue.arrayUnion(
+      comment: firebaseInstance.firestore.FieldValue.arrayUnion(
         `${commentDBName}/${commentId}`
       ),
       unreadComment: true,
@@ -193,7 +207,7 @@ const commentWriteAPI = async (data) => {
       .collection("userDB")
       .doc(commenterUid)
       .update({
-        point: firebase.firestore.FieldValue.increment(1),
+        point: firebaseInstance.firestore.FieldValue.increment(1),
       });
 
     const postDB = await postRef.get();

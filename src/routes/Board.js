@@ -10,6 +10,7 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 import "scss/Board.scss";
+import cp2077 from "assets/image/RX cp2077 FanArt.jpg";
 
 const Board = () => {
   // const { isLoggedIn } = useSelector((state) => state.auth);
@@ -46,9 +47,30 @@ const Board = () => {
 
     case "/Stock/page=:id":
       divClassName = "Stock";
-      category = "주식";
+      category = "국내주식";
       linkToWrite = "StockPostWrite";
       dbName = "StockPostDB";
+      break;
+
+    case "/OsStock/page=:id":
+      divClassName = "OsStock";
+      category = "해외주식";
+      linkToWrite = "OsStockPostWrite";
+      dbName = "OsStockPostDB";
+      break;
+
+    case "/Free/page=:id":
+      divClassName = "Free";
+      category = "자유";
+      linkToWrite = "FreePostWrite";
+      dbName = "FreePostDB";
+      break;
+
+    case "/Game/page=:id":
+      divClassName = "Game";
+      category = "게임";
+      linkToWrite = "GamePostWrite";
+      dbName = "GamePostDB";
       break;
 
     default:
@@ -115,6 +137,14 @@ const Board = () => {
   return (
     <div className={divClassName}>
       <NavbarBrand>{category}</NavbarBrand>
+      {category === "게임" && (
+        <>
+          <br></br>
+          <img className="boardBanner" src={cp2077} alt="game board logo" />
+        </>
+      )}
+
+      <br></br>
 
       <Table id="boardTable" responsive>
         <thead>

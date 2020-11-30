@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Link,
   useHistory,
   useLocation,
   useParams,
@@ -34,7 +35,7 @@ const PostContent = () => {
   const { auth, post } = useSelector((state) => state);
   const getPostContent = post;
 
-  const { isLoggedIn, nickname, permission, uid } = auth;
+  const { isLoggedIn, nickname, permission, uid, point } = auth;
 
   console.log("PostContent/auth", auth);
 
@@ -58,6 +59,8 @@ const PostContent = () => {
   const match = useRouteMatch();
   // eslint-disable-next-line no-unused-vars
   const { path, url } = match;
+  console.log("id", id);
+  console.log("url", url);
   const history = useHistory();
   // eslint-disable-next-line no-unused-vars
   const loc = useLocation();
@@ -84,6 +87,21 @@ const PostContent = () => {
     case "Stock":
       divClassName = "Stock";
       dbName = "StockPostDB";
+      break;
+
+    case "OsStock":
+      divClassName = "OsStock";
+      dbName = "OsStockPostDB";
+      break;
+
+    case "Free":
+      divClassName = "Free";
+      dbName = "FreeStockPostDB";
+      break;
+
+    case "Game":
+      divClassName = "Game";
+      dbName = "GameStockPostDB";
       break;
 
     default:
@@ -342,6 +360,8 @@ const PostContent = () => {
         replyTo: null,
 
         unreadReply: false,
+
+        commenterPoint: point,
       };
 
       dispatch({
@@ -415,7 +435,9 @@ const PostContent = () => {
 
             {creatorUid === uid || permission === "admin" ? (
               <>
-                {/* <Button className="mr-1">수정</Button> */}
+                <Button as={Link} to={`/PostUpdate/${id}`} className="mr-1">
+                  수정
+                </Button>
                 <Button className="mr-1" onClick={handleShowModalToDelete}>
                   삭제
                 </Button>

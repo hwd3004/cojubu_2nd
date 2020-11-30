@@ -71,13 +71,13 @@ const Header = () => {
       <Nav.Link as={Link} to="/SignUp">
         가입하기
       </Nav.Link>
-      <Nav.Link
+      {/* <Nav.Link
         onClick={() => {
           alert("🛠 Sorry. I have not made it yet.");
         }}
       >
         계정 찾기
-      </Nav.Link>
+      </Nav.Link> */}
     </Nav>
   );
 

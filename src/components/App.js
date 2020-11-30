@@ -20,18 +20,13 @@ const App = () => {
 
           console.log("onAuthStateChanged(user)", user);
 
-          const payload = {
-            // email,
-            uid,
-          };
-
           // store.dispatch({
           //   type: USER_LOADING_REQUEST,
           //   payload,
           // });
           dispatch({
             type: USER_LOADING_REQUEST,
-            payload,
+            payload: uid,
           });
         }
       } catch (error) {
