@@ -111,12 +111,12 @@ const authReducer = (state = initialState, action) => {
       return {
         isLoggedIn: false,
         isLoading: false,
-        uid: null,
-        nickname: null,
-        email: null,
-        password: null,
-        signUpDay: null,
-        permission: null,
+        uid: "",
+        nickname: "",
+        email: "",
+        password: "",
+        signUpDay: "",
+        permission: "user",
         emailVerified: false,
         point: 0,
       };

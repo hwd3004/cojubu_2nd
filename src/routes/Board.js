@@ -62,7 +62,7 @@ const Board = () => {
     let getLimit = 1;
 
     if (nowPageNum !== 1) {
-      getLimit = getLimit * 3;
+      getLimit = getLimit * 20;
     }
 
     const postDB = await dbService
@@ -78,7 +78,7 @@ const Board = () => {
         .collection(`${dbName}`)
         .orderBy("time", "desc")
         .startAt(lastSnapshot.data().time)
-        .limit(3)
+        .limit(20)
         .get();
 
       startAtPostDB.forEach((doc) => {
@@ -100,15 +100,15 @@ const Board = () => {
 
   const checkEmailVerifiedToPostWrite = () => {
     if (authService.currentUser) {
-      authService.currentUser.reload();
-
-      if (authService.currentUser.emailVerified) {
-        history.push(`/${linkToWrite}`);
-      } else {
-        alert("이메일 인증이 완료된 사용자만 글쓰기가 가능합니다.");
-      }
+      authService.currentUser.reload().then(() => {
+        if (authService.currentUser.emailVerified) {
+          history.push(`/${linkToWrite}`);
+        } else {
+          alert("이메일 인증이 완료된 사용자만 글쓰기가 가능합니다. alert-2");
+        }
+      });
     } else {
-      alert("이메일 인증이 완료된 사용자만 글쓰기가 가능합니다.");
+      alert("이메일 인증이 완료된 사용자만 글쓰기가 가능합니다. alert-1");
     }
   };
 

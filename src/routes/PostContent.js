@@ -31,6 +31,29 @@ import { authService } from "fbase";
 import Comment from "components/Comment";
 
 const PostContent = () => {
+  const { auth, post } = useSelector((state) => state);
+  const getPostContent = post;
+
+  const { isLoggedIn, nickname, permission, uid } = auth;
+
+  console.log("PostContent/auth", auth);
+
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   authService.onAuthStateChanged((user) => {
+  //     const uid = user.uid;
+  //     const payload = { uid };
+
+  //     if (user) {
+  //       dispatch({
+  //         type: USER_LOADING_REQUEST,
+  //         payload,
+  //       });
+  //     }
+  //   });
+  // }, []);
+
   const { id } = useParams();
   const match = useRouteMatch();
   // eslint-disable-next-line no-unused-vars
@@ -40,19 +63,12 @@ const PostContent = () => {
   const loc = useLocation();
 
   // const [document, setDocument] = useState({});
-  const { auth } = useSelector((state) => state);
-
-  const { uid, isLoggedIn, nickname, permission } = auth;
-
-  const getPostContent = useSelector((state) => state.post);
 
   const [showModalToDelete, setShowModalToDelete] = useState(false);
   const handleCloseModalToDelete = () => setShowModalToDelete(false);
   const handleShowModalToDelete = () => setShowModalToDelete(true);
 
   const [inputComment, setInputComment] = useState("");
-
-  const dispatch = useDispatch();
 
   // eslint-disable-next-line no-unused-vars
   let divClassName, dbName;
@@ -310,7 +326,7 @@ const PostContent = () => {
         commentId: `${divClassName}-${shortid.generate()}`,
 
         commenterUid: uid,
-        commenterNickanme: nickname,
+        commenterNickname: nickname,
 
         commentContent: inputComment,
         commentCreatedAt: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -324,6 +340,8 @@ const PostContent = () => {
 
         // 대댓글 구현시 부모댓글이 무엇인지
         replyTo: null,
+
+        unreadReply: false,
       };
 
       dispatch({
@@ -397,7 +415,7 @@ const PostContent = () => {
 
             {creatorUid === uid || permission === "admin" ? (
               <>
-                <Button className="mr-1">수정</Button>
+                {/* <Button className="mr-1">수정</Button> */}
                 <Button className="mr-1" onClick={handleShowModalToDelete}>
                   삭제
                 </Button>

@@ -25,6 +25,8 @@ const PostWrite = () => {
   const auth = useSelector((state) => state.auth);
   const { isLoggedIn, nickname } = auth;
 
+  console.log("PostWrite/auth", auth);
+
   const dispatch = useDispatch();
 
   // console.log("uid, point?", uid, point);
@@ -119,10 +121,10 @@ const PostWrite = () => {
     // await dbService.collection("PostDB").doc(url).set(newPost);
     await dbService.collection(`${dbName}`).doc(url).set(newPost);
 
-    dispatch({
-      type: GET_POINT_WHEN_POST_REQUEST,
-      payload: auth,
-    });
+    // dispatch({
+    //   type: GET_POINT_WHEN_POST_REQUEST,
+    //   payload: auth,
+    // });
 
     history.push(url);
   };

@@ -11,11 +11,12 @@ const Comment = (props) => {
       commentDownVote,
       commentId,
       commentUpVote,
-      commenterNickanme,
+      commenterNickname,
       commenterUid,
       isDeleted,
       postUrl,
       replyTo,
+      unreadReply,
     },
     isLoading,
   } = props;
@@ -25,7 +26,7 @@ const Comment = (props) => {
       <ListGroup>
         <ListGroupItem>
           <div className="d-flex">
-            <p>{commenterNickanme}</p>
+            <p>{commenterNickname}</p>
             <div className="d-flex ml-auto">
               <p>추천 {commentUpVote} |</p>&nbsp;
               <p>비추 {commentDownVote} |</p>&nbsp;

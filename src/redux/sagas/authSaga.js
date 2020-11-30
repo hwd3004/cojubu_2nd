@@ -95,7 +95,11 @@ const userLoadingAPI = async (loadingData) => {
       .collection("userDB")
       .doc(uid)
       .get()
-      .then((doc) => doc.data());
+      .then((doc) => {
+        return doc.data();
+      });
+
+    console.log("userRef", userRef);
 
     if (
       authService.currentUser.emailVerified === true &&

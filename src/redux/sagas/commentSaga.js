@@ -10,7 +10,7 @@ import {
   COMMENT_WRITE_SUCCESS,
 } from "redux/types";
 
-const findDBNameAndCommentDBNameByCategory = (inputCategory) => {
+export const findDBNameAndCommentDBNameByCategory = (inputCategory) => {
   let dbName, commentDBName;
 
   switch (inputCategory) {
@@ -32,6 +32,8 @@ const findDBNameAndCommentDBNameByCategory = (inputCategory) => {
 };
 
 const getCommentObjByCommentDataOfPostDB = async (inputCommentData) => {
+  console.log("inputCommentData", inputCommentData);
+
   let resultData = [];
 
   if (inputCommentData.length > 0) {
@@ -46,7 +48,7 @@ const getCommentObjByCommentDataOfPostDB = async (inputCommentData) => {
         .doc(commentDocName)
         .get();
 
-      const commentDB = commentRef.data();
+      const commentDB = await commentRef.data();
 
       resultData.push(commentDB);
     }
@@ -169,18 +171,7 @@ const commentWriteAPI = async (data) => {
   console.log("commentWriteAPI", data);
 
   const { category, url, comment } = data;
-  const {
-    commentContent,
-    commentCreatedAt,
-    commentDownVote,
-    commentId,
-    commentUpVote,
-    commenterNickname,
-    commenterUid,
-    isDeleted,
-    postUrl,
-    replyTo,
-  } = comment;
+  const { commentId, commenterUid } = comment;
 
   const { dbName, commentDBName } = findDBNameAndCommentDBNameByCategory(
     category
@@ -221,6 +212,8 @@ const commentWriteAPI = async (data) => {
 function* commentWrite(action) {
   try {
     const result = yield call(commentWriteAPI, action.payload);
+
+    console.log("commentWrite", result);
 
     yield put({
       type: COMMENT_WRITE_SUCCESS,

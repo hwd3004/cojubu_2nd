@@ -13,6 +13,7 @@ import {
   POST_DELETE_REQUEST,
 } from "../types";
 import * as firebase from "firebase";
+import { findDBNameAndCommentDBNameByCategory } from "./commentSaga";
 
 // 포스트 컨텐츠 불러오기 - postContentAPI는 직접 수정해줘야함
 const findDBNameByCategory = (inputCategory) => {
@@ -61,7 +62,18 @@ const postDeleteAPI = async (postData) => {
     console.log("postDeleteAPI", postData);
 
     // eslint-disable-next-line no-unused-vars
-    const { url, category, currentUserUid, creatorUid, permission } = postData;
+    const {
+      url,
+      category,
+      currentUserUid,
+      creatorUid,
+      permission,
+      comment,
+    } = postData;
+
+    // const { dbName, commentDBName } = findDBNameAndCommentDBNameByCategory(
+    //   category
+    // );
 
     const dbName = findDBNameByCategory(category);
 
@@ -69,10 +81,25 @@ const postDeleteAPI = async (postData) => {
       const postRef = await dbService.collection(`${dbName}`).doc(url);
 
       let countUpVote;
+      let commentArray;
 
       await postRef.get().then((doc) => {
         countUpVote = doc.data().upVote.length * 5;
+        commentArray = doc.data().comment;
       });
+
+      for (const iterator of commentArray) {
+        console.log("commentArray", iterator);
+
+        const splitIterator = iterator.split("/");
+        const getCommentDBName = splitIterator[0];
+        const getCommentDocName = splitIterator[1];
+
+        await dbService
+          .collection(`${getCommentDBName}`)
+          .doc(getCommentDocName)
+          .delete();
+      }
 
       const recallPoint = countUpVote + 5;
 
