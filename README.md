@@ -393,3 +393,29 @@ yield put(push("/")) 라는게 있었네
 ---
 
 # 47. 글 수정 기능 완료
+
+---
+
+# 48. npm install babel-plugin-transform-remove-console --save-dev
+
+1. console.log 지우기
+
+```
+                    },
+                  ],
+                  ["transform-remove-console", { exclude: ["error", "warn"] }],
+                ],
+                // This is a feature of `babel-loader` for webpack (not Babel itself).
+                // It enables caching results in ./node_modules/.cache/babel-loader/
+                // directory for faster rebuilds.
+```
+
+2. cli 명령어 firebase use 를 이용하여 디폴트 프로젝트를 바꿀 수 있다
+
+3. firebase deploy 할때 나는 에러 retries exhausted after 6 attempts
+
+.firebase 폴더를 삭제하고 다시 디플로이 했더니 해결되었다
+
+4. 페이지네이션 완료
+
+5. gsutil로 cors 설정, storage.rules 수정 완료

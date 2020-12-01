@@ -1,6 +1,6 @@
 [
   {
-    "origin": ["https://coju-bu.firebaseapp.com"],
+    "origin": ["https://cos-co.firebaseapp.com"],
     "method": ["GET"],
     "maxAgeSeconds": 3600
   }

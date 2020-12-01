@@ -19,22 +19,24 @@ const Everything = () => {
         .limit(1)
         .get();
 
-      const lastSnapshot = postDB.docs[postDB.docs.length - 1];
+      if (postDB.docs.length > 0) {
+        const lastSnapshot = postDB.docs[postDB.docs.length - 1];
 
-      const startAtPostDB = await dbService
-        .collection(`${dbName}`)
-        .orderBy("time", "desc")
-        .startAt(lastSnapshot.data().time)
-        .limit(5)
-        .get();
+        const startAtPostDB = await dbService
+          .collection(`${dbName}`)
+          .orderBy("time", "desc")
+          .startAt(lastSnapshot.data().time)
+          .limit(5)
+          .get();
 
-      startAtPostDB.forEach((doc) => {
-        const postObj = {
-          ...doc.data(),
-        };
+        startAtPostDB.forEach((doc) => {
+          const postObj = {
+            ...doc.data(),
+          };
 
-        setTotalList((prev) => [...prev, postObj]);
-      });
+          setTotalList((prev) => [...prev, postObj]);
+        });
+      }
     }
   };
 
@@ -50,7 +52,7 @@ const Everything = () => {
 
   return (
     <div className="Everything">
-      <NavbarBrand>전체 게시판</NavbarBrand>
+      {/* <NavbarBrand>전체 게시판</NavbarBrand> */}
 
       <Table id="skyrocketTable" responsive>
         <thead>

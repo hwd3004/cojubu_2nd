@@ -1,6 +1,6 @@
 import { authService, dbService } from "fbase";
 import React, { useEffect, useState } from "react";
-import { Button, NavbarBrand, Table } from "react-bootstrap";
+import { Button, NavbarBrand, Pagination, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import {
   Link,
@@ -36,6 +36,10 @@ const Board = () => {
   // console.log("path", path);
 
   let divClassName, category, linkToWrite, dbName;
+
+  const nowPageNum = parseInt(params.id);
+
+  console.log("nowPageNum", nowPageNum);
 
   switch (path) {
     case "/Coin/page=:id":
@@ -79,13 +83,14 @@ const Board = () => {
   }
 
   const getPost = async () => {
-    const nowPageNum = parseInt(params.id);
-
     let getLimit = 1;
+    const listNum = 20;
 
     if (nowPageNum !== 1) {
-      getLimit = getLimit * 20;
+      getLimit = (nowPageNum - 1) * listNum;
     }
+
+    console.log("getLimit", getLimit);
 
     const postDB = await dbService
       .collection(`${dbName}`)
@@ -100,7 +105,7 @@ const Board = () => {
         .collection(`${dbName}`)
         .orderBy("time", "desc")
         .startAt(lastSnapshot.data().time)
-        .limit(20)
+        .limit(listNum - 1)
         .get();
 
       startAtPostDB.forEach((doc) => {
@@ -118,7 +123,7 @@ const Board = () => {
     setList([]);
     getPost();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path]);
+  }, [nowPageNum, path]);
 
   const checkEmailVerifiedToPostWrite = () => {
     if (authService.currentUser) {
@@ -133,6 +138,90 @@ const Board = () => {
       alert("이메일 인증이 완료된 사용자만 글쓰기가 가능합니다. alert-1");
     }
   };
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  // 페이지네이션
+
+  const pagePrev = () => {
+    if (nowPageNum > 1) {
+      history.push(`/${divClassName}/page=${nowPageNum - 1}`);
+    } else {
+      history.push(`/${divClassName}/page=1`);
+    }
+  };
+
+  const pageNext = () => {
+    history.push(`/${divClassName}/page=${nowPageNum + 1}`);
+  };
+
+  const pageFirst = () => {
+    if (nowPageNum <= 10) {
+      history.push(`/${divClassName}/page=1`);
+    } else {
+      history.push(`/${divClassName}/page=${nowPageNum - 10}`);
+    }
+  };
+
+  const pageLast = () => {
+    history.push(`/${divClassName}/page=${nowPageNum + 10}`);
+  };
+
+  const pageSelect = (event) => {
+    console.log(event.target.textContent);
+
+    const {
+      target: { textContent },
+    } = event;
+
+    history.push(`/${divClassName}/page=${textContent}`);
+  };
+
+  let startPage, endPage;
+  let pageList = [];
+
+  const getPageList = () => {
+    const temp = nowPageNum / 10 + 1;
+    startPage = Math.floor(temp);
+
+    console.log("startPage", startPage);
+
+    endPage = startPage * 10 + 1;
+
+    if (nowPageNum < 10) {
+      for (let index = 1; index <= 10; index++) {
+        pageList[index] = index;
+      }
+    } else {
+      for (startPage = endPage - 11; startPage < endPage; startPage++) {
+        pageList[startPage] = startPage;
+      }
+    }
+  };
+
+  getPageList();
+
+  //
+  //
+  //
 
   return (
     <div className={divClassName}>
@@ -205,6 +294,23 @@ const Board = () => {
       </Button> */}
 
       <Button onClick={checkEmailVerifiedToPostWrite}>글쓰기</Button>
+
+      <br></br>
+      <br></br>
+
+      <Pagination>
+        <Pagination.First onClick={pageFirst} />
+        <Pagination.Prev onClick={pagePrev} />
+        {pageList.map((item, index) => {
+          return (
+            <Pagination.Item key={index} onClick={pageSelect}>
+              {item}
+            </Pagination.Item>
+          );
+        })}
+        <Pagination.Next onClick={pageNext} />
+        <Pagination.Last onClick={pageLast} />
+      </Pagination>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LOGIN_REQUEST } from "redux/types";
 import Profile from "./Profile";
-import ckdm_converted_logo from "assets/image/ckdm_converted_logo.svg";
+import ckdm_converted_logo from "assets/image/ckdm_converted_csc_logo.svg";
 
 const Header = () => {
   const [form, setForm] = useState({
@@ -85,7 +85,7 @@ const Header = () => {
     <div className="Header">
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Navbar.Brand as={Link} to="/">
-          코주부
+          코스코 - Coin Stock Community
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
