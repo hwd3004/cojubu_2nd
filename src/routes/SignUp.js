@@ -43,7 +43,7 @@ const SignUp = () => {
     const { nickname, password, checkPassword } = signUpForm;
 
     const checkExistNickname = await dbService
-      .collection("user")
+      .collection("userDB")
       .where("nickname", "==", nickname)
       .get();
 
