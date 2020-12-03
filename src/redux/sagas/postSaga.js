@@ -120,8 +120,8 @@ function* postContent(action) {
     yield put({
       type: POST_CONTENT_FAILURE,
     });
-    console.log("postUpVote", error);
-    alert("postUpVote", error);
+    console.log("postContent", error);
+    alert("postContent", error);
   }
 }
 

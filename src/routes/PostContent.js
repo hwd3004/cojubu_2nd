@@ -313,33 +313,35 @@ const PostContent = () => {
   };
 
   const checkEmailVerifiedToComment = () => {
-    let emailVerified;
+    let checkEmail;
 
     if (authService.currentUser) {
-      authService.currentUser.reload();
+      console.log(authService.currentUser);
 
-      if (authService.currentUser.emailVerified) {
-        emailVerified = true;
+      if (authService.currentUser.emailVerified === true) {
+        console.log(authService.currentUser.emailVerified);
+        checkEmail = true;
       } else {
         alert("이메일 인증이 완료된 사용자만 댓글쓰기가 가능합니다.");
 
-        emailVerified = false;
+        checkEmail = false;
       }
     } else {
       alert("이메일 인증이 완료된 사용자만 댓글쓰기가 가능합니다.");
 
-      emailVerified = false;
+      checkEmail = false;
     }
 
-    return emailVerified;
+    return checkEmail;
   };
 
   const onSubmitComment = (event) => {
     event.preventDefault();
 
     const checkPermission = checkEmailVerifiedToComment();
+    console.log("checkPermission", checkPermission);
 
-    if (checkPermission) {
+    if (checkPermission === true) {
       const data = {
         commentId: `${divClassName}-${shortid.generate()}`,
 
@@ -433,15 +435,15 @@ const PostContent = () => {
               Back
             </Button>
 
+            {creatorUid === uid && (
+              <Button as={Link} to={`/PostUpdate/${id}`} className="mr-1">
+                수정
+              </Button>
+            )}
             {creatorUid === uid || permission === "admin" ? (
-              <>
-                <Button as={Link} to={`/PostUpdate/${id}`} className="mr-1">
-                  수정
-                </Button>
-                <Button className="mr-1" onClick={handleShowModalToDelete}>
-                  삭제
-                </Button>
-              </>
+              <Button className="mr-1" onClick={handleShowModalToDelete}>
+                삭제
+              </Button>
             ) : null}
           </div>
 
@@ -458,24 +460,22 @@ const PostContent = () => {
               );
             })}
 
-          {isLoggedIn ? (
-            <Form onSubmit={onSubmitComment}>
-              <FormGroup>
-                <FormLabel>댓글 쓰기</FormLabel>
-                <FormControl
-                  onChange={onChangeComment}
-                  value={inputComment}
-                  name="comment"
-                  as="textarea"
-                  minLength="2"
-                  maxLength="200"
-                  rows="4"
-                  style={{ resize: "none" }}
-                />
-                <Button type="submit">댓글 등록</Button>
-              </FormGroup>
-            </Form>
-          ) : null}
+          <Form onSubmit={onSubmitComment}>
+            <FormGroup>
+              <FormLabel>댓글 쓰기</FormLabel>
+              <FormControl
+                onChange={onChangeComment}
+                value={inputComment}
+                name="comment"
+                as="textarea"
+                minLength="2"
+                maxLength="200"
+                rows="4"
+                style={{ resize: "none" }}
+              />
+              <Button type="submit">댓글 등록</Button>
+            </FormGroup>
+          </Form>
         </div>
       ) : null}
     </>

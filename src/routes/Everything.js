@@ -2,6 +2,7 @@ import { dbService } from "fbase";
 import React, { useEffect, useState } from "react";
 import { NavbarBrand, Pagination, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import "scss/Skyrocket.scss"
 
 const Everything = () => {
   const [totalList, setTotalList] = useState([]);
@@ -100,7 +101,7 @@ const Everything = () => {
                 <td>{creatorNickname}</td>
                 <td>{createdAt}</td>
                 <td>{views}</td>
-                <td>{upVote !== 0 && upVote}</td>
+                <td>{upVote.length !== 0 && `+${upVote.length}`}</td>
               </tr>
             );
           })}
