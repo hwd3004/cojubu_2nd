@@ -5,7 +5,7 @@ const Footer = () => {
     <div className="Footer">
       <br />
       <br />
-      <div>&copy; 코주부 {new Date().getFullYear()} </div>
+      <div>&copy; COSCO - Coin Stock Community {new Date().getFullYear()} </div>
       <br />
       <br />
     </div>
